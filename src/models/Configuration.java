@@ -18,4 +18,8 @@ public class Configuration extends ArchitecturalElement implements Serializable 
     public void setName(String name) {
         this.name = name;
     }
+
+    public ArrayList<Component> getComponents() {
+        return components;
+    }
 }

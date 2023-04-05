@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="Architecture" type="Architecture"/>
+    <xs:complexType name="Architecture">
+        <xs:sequence>
+            <xs:element ref="Configuration" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="Configuration" type="Configuration"/>
+    <xs:complexType name="Configuration">
+        <xs:sequence>
+            <xs:element ref="Component"  minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element ref="Connector" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element ref="Configuration" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Component" type="Component" />
+    <xs:complexType name="Component">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element ref="Port" minOccurs="1" maxOccurs="unbounded" />
+            <xs:element ref="Component"  minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Connector" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Implementation" type="Implementation" />
+    <xs:complexType name="Implementation">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element ref="Port" minOccurs="1" maxOccurs="unbounded" />
+            <xs:element ref="Component"  minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="Connector" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Connector" type="Connector"/>
+    <xs:complexType name="Connector">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element ref="Port_In" minOccurs="1" maxOccurs="1" />
+            <xs:element ref="Port_Out" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="Port" type="Port" />
+    <xs:complexType name="Port">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="Port_In" type="Port_In" />
+    <xs:complexType name="Port_In">
+        <xs:complexContent>
+            <xs:extension base="Port">
+                <xs:sequence />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="Port_Out" type="Port_Out" />
+    <xs:complexType name="Port_Out">
+        <xs:complexContent>
+            <xs:extension base="Port">
+                <xs:sequence />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+</xs:schema>

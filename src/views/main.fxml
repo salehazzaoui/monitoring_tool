@@ -42,13 +42,14 @@
          <children>
             <Button fx:id="addConf" mnemonicParsing="false" onAction="#addNewConf" text="Add Configuratuion" />
             <Button fx:id="addCom" mnemonicParsing="false" onAction="#addNewComponent" text="Add Component" />
-            <Button mnemonicParsing="false" text="Add Port" />
+            <Button fx:id="addPortBtn" mnemonicParsing="false" onAction="#addPort" text="Add Port" />
+            <Button mnemonicParsing="false" text="Add Connector" />
             <Button mnemonicParsing="false" text="Add Attribute" />
             <Button mnemonicParsing="false" text="Add Methode" />
-            <MenuButton mnemonicParsing="false" text="Check">
+            <MenuButton mnemonicParsing="false" text="Check Struct &amp; Behav">
               <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
-                <MenuItem mnemonicParsing="false" text="Action 2" />
+                <MenuItem fx:id="structBtn" mnemonicParsing="false" onAction="#checkStructural" text="Structural" />
+                <MenuItem fx:id="behavBtn" mnemonicParsing="false" onAction="#checkBehavioral" text="Behavioral" />
               </items>
             </MenuButton>
          </children>
@@ -65,20 +66,16 @@
                     <tabs>
                       <Tab fx:id="mainConf" text="Main Configuration">
                            <content>
-                              <VBox>
-                                 <children>
-                                    <ScrollPane prefHeight="306.0" prefWidth="606.0" VBox.vgrow="ALWAYS">
-                                       <content>
-                                          <AnchorPane prefHeight="302.0" prefWidth="626.0" />
-                                       </content>
-                                    </ScrollPane>
-                                 </children>
-                              </VBox>
+                              <ScrollPane prefHeight="306.0" prefWidth="606.0">
+                                 <content>
+                                    <AnchorPane prefHeight="302.0" prefWidth="626.0" />
+                                 </content>
+                              </ScrollPane>
                            </content>
                       </Tab>
                     </tabs>
                   </TabPane>
-                  <TextArea id="resultTextArea" editable="false" prefHeight="200.0" prefWidth="200.0" promptText="The resualt of verification shows here" />
+                  <TextArea id="resultTextArea" fx:id="resTextArea" editable="false" prefHeight="200.0" prefWidth="200.0" promptText="The resualt of verification shows here" />
                </children>
             </VBox>
          </children>
