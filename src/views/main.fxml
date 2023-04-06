@@ -42,7 +42,6 @@
          <children>
             <Button fx:id="addConf" mnemonicParsing="false" onAction="#addNewConf" text="Add Configuratuion" />
             <Button fx:id="addCom" mnemonicParsing="false" onAction="#addNewComponent" text="Add Component" />
-            <Button fx:id="addPortBtn" mnemonicParsing="false" onAction="#addPort" text="Add Port" />
             <Button mnemonicParsing="false" text="Add Connector" />
             <Button mnemonicParsing="false" text="Add Attribute" />
             <Button mnemonicParsing="false" text="Add Methode" />

@@ -19,7 +19,7 @@ public class NewComponentController {
         return configurationsChoice;
     }
 
-    public String addComponent(Configuration configuration){
+    public Component addComponent(Configuration configuration){
          String name = nameComp.getText();
          if (name.isEmpty()){
              Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -28,8 +28,9 @@ public class NewComponentController {
              alert.show();
              return null;
          }
-         configuration.components.add(new Component(name));
+         Component component = new Component(name.trim());
+         configuration.components.add(component);
 
-         return name;
+         return component;
     }
 }
