@@ -28,12 +28,16 @@ public class ComponentBlock extends Pane implements EventHandler<MouseEvent> {
     private Component component;
     private Label header = new Label();
     private Label nameC = new Label();
+    private ArrayList<Arrow> connectorsArrow = new ArrayList<>();
 
     private double POS_Y_RIGHT = 0;
     private double POS_Y_LEFT = 0;
     private double POS_X_TOP = 0;
     private double POS_X_BOTTOM = 0;
     private int count = 0;
+
+    private double mouseAnchorX;
+    private double mouseAnchorY;
 
     public ComponentBlock(Component component){
         this.component = component;
@@ -43,6 +47,17 @@ public class ComponentBlock extends Pane implements EventHandler<MouseEvent> {
         this.getChildren().add(this.updateHeader("<< Component >>"));
         this.getChildren().add(this.updateName(component.getName()));
         this.setOnMouseClicked((mouseEvent) -> handle(mouseEvent));
+        this.setOnMousePressed(mouseEvent -> {
+            mouseAnchorX = mouseEvent.getX();
+            mouseAnchorY = mouseEvent.getY();
+        });
+
+        this.setOnMouseDragged(mouseEvent -> {
+            this.setLayoutX(mouseEvent.getSceneX() - mouseAnchorX);
+            this.setLayoutY(mouseEvent.getSceneY() - mouseAnchorY);
+            this.component.setX(this.getLayoutX());
+            this.component.setY(this.getLayoutY());
+        });
     }
 
     public Label updateHeader(String header){
@@ -98,6 +113,7 @@ public class ComponentBlock extends Pane implements EventHandler<MouseEvent> {
                     System.out.println(port.getType());
                     // Build port element
                     PortBlock portBlock = new PortBlock(port.getName().charAt(0)+""+String.valueOf(this.count++), port);
+                    portBlock.setId(component.getName()+"-"+port.getName());
                     this.getChildren().add(portBlock);
                     switch (positionVal){
                         case "RIGHT":
@@ -105,24 +121,32 @@ public class ComponentBlock extends Pane implements EventHandler<MouseEvent> {
                             POS_Y_RIGHT = POS_Y_RIGHT + 10;
                             portBlock.setLayoutY(POS_Y_RIGHT);
                             POS_Y_RIGHT = POS_Y_RIGHT + 12;
+                            port.setX(portBlock.getLayoutX());
+                            port.setY(portBlock.getLayoutY());
                             break;
                         case "LEFT":
                             portBlock.setLayoutX(0 - portBlock.getMinWidth());
                             POS_Y_LEFT = POS_Y_LEFT + 10;
                             portBlock.setLayoutY(POS_Y_LEFT);
                             POS_Y_LEFT = POS_Y_LEFT + 12;
+                            port.setX(portBlock.getLayoutX());
+                            port.setY(portBlock.getLayoutY());
                             break;
                         case "TOP":
                             POS_X_TOP = POS_X_TOP + 10;
                             portBlock.setLayoutX(POS_X_TOP);
                             POS_X_TOP = POS_X_TOP + 12;
                             portBlock.setLayoutY(0 - portBlock.getMinHeight());
+                            port.setX(portBlock.getLayoutX());
+                            port.setY(portBlock.getLayoutY());
                             break;
                         case "BOTTOM":
                             POS_X_BOTTOM = POS_X_BOTTOM + 10;
                             portBlock.setLayoutX(POS_X_BOTTOM);
                             POS_X_BOTTOM = POS_X_BOTTOM + 12;
                             portBlock.setLayoutY(this.getHeight() - portBlock.getPrefHeight());
+                            port.setX(portBlock.getLayoutX());
+                            port.setY(portBlock.getLayoutY());
                             break;
                     }
                 }else {
@@ -130,5 +154,17 @@ public class ComponentBlock extends Pane implements EventHandler<MouseEvent> {
                 }
             }
         }
+    }
+
+    public ArrayList<Arrow> getConnectorsArrow() {
+        return connectorsArrow;
+    }
+
+    public void addConnectorArrow(Arrow connector){
+        connectorsArrow.add(connector);
+    }
+
+    public Component getComponent() {
+        return component;
     }
 }

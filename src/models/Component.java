@@ -1,6 +1,9 @@
 package models;
 
+import utils.TypePort;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class Component {
     private String name;
@@ -9,6 +12,7 @@ public class Component {
     private double X;
     private double Y;
 
+    public ArrayList<Component> components = new ArrayList<>();
     public ArrayList<Port> ports = new ArrayList<>();
 
     public Component(String name) {
@@ -41,6 +45,14 @@ public class Component {
         return ports;
     }
 
+    public List<Port> getPortsIn() {
+        return ports.stream().filter(port -> port.getType().equals(TypePort.IN)).toList();
+    }
+
+    public List<Port> getPortsOut() {
+        return ports.stream().filter(port -> port.getType().equals(TypePort.OUT)).toList();
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -59,5 +71,9 @@ public class Component {
 
     public void setY(double y) {
         Y = y;
+    }
+
+    public ArrayList<Component> getComponents() {
+        return components;
     }
 }

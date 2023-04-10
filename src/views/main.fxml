@@ -42,13 +42,13 @@
          <children>
             <Button fx:id="addConf" mnemonicParsing="false" onAction="#addNewConf" text="Add Configuratuion" />
             <Button fx:id="addCom" mnemonicParsing="false" onAction="#addNewComponent" text="Add Component" />
-            <Button mnemonicParsing="false" text="Add Connector" />
+            <Button fx:id="addConnector" mnemonicParsing="false" onAction="#addNewConnector" text="Add Connector" />
             <Button mnemonicParsing="false" text="Add Attribute" />
             <Button mnemonicParsing="false" text="Add Methode" />
-            <MenuButton mnemonicParsing="false" text="Check Struct &amp; Behav">
+            <MenuButton mnemonicParsing="false" text="Check Architecture">
               <items>
                 <MenuItem fx:id="structBtn" mnemonicParsing="false" onAction="#checkStructural" text="Structural" />
-                <MenuItem fx:id="behavBtn" mnemonicParsing="false" onAction="#checkBehavioral" text="Behavioral" />
+                <MenuItem fx:id="behavBtn" mnemonicParsing="false" onAction="#checkBehavioral" text="With Uppaal" />
               </items>
             </MenuButton>
          </children>

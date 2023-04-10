@@ -5,7 +5,9 @@ import java.util.ArrayList;
 
 public class Configuration extends ArchitecturalElement implements Serializable {
     private String name;
+    public ArrayList<Configuration> configurations = new ArrayList<>();
     public ArrayList<Component> components = new ArrayList<>();
+    public ArrayList<Connector> connectors = new ArrayList<>();
 
     public Configuration(String name) {
         this.name = name;
@@ -21,5 +23,25 @@ public class Configuration extends ArchitecturalElement implements Serializable 
 
     public ArrayList<Component> getComponents() {
         return components;
+    }
+
+    public Component getCompByName(String name) throws Exception {
+        int i = 0;
+        while (!components.get(i).getName().trim().equals(name.trim())){
+            i++;
+        }
+        if (i < components.size()){
+            return components.get(i);
+        }else {
+            throw new Exception("not match name");
+        }
+    }
+
+    public ArrayList<Connector> getConnectors() {
+        return connectors;
+    }
+
+    public ArrayList<Configuration> getConfigurations() {
+        return configurations;
     }
 }
