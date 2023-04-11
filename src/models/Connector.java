@@ -1,14 +1,19 @@
 package models;
 
-public class Connector {
+import java.io.Serializable;
+
+public class Connector extends ArchitecturalElement implements Serializable {
     private String name;
+    private int bandwidth;
     private Port portIn;
     private Port portOut;
+    private ConnectorConstraint constraint;
 
-    public Connector(String name, Port portIn, Port portOut) {
+    public Connector(String name, Port portIn, Port portOut, int bandwidth) {
         this.name = name;
         this.portIn = portIn;
         this.portOut = portOut;
+        this.bandwidth = bandwidth;
     }
 
     public String getName() {
@@ -33,5 +38,21 @@ public class Connector {
 
     public void setPortOut(Port portOut) {
         this.portOut = portOut;
+    }
+
+    public int getBandwidth() {
+        return bandwidth;
+    }
+
+    public void setBandwidth(int bandwidth) {
+        this.bandwidth = bandwidth;
+    }
+
+    public ConnectorConstraint getConstraint() {
+        return constraint;
+    }
+
+    public void setConstraint(ConnectorConstraint constraint) {
+        this.constraint = constraint;
     }
 }

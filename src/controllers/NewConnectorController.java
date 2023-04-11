@@ -11,6 +11,8 @@ public class NewConnectorController {
     @FXML
     private TextField nameConnectorField;
     @FXML
+    private TextField bandConnectorField;
+    @FXML
     private ChoiceBox<String> srcCompChoice;
     @FXML
     private ChoiceBox<String> desCompChoice;
@@ -36,15 +38,26 @@ public class NewConnectorController {
     }
 
     public Connector addConnector(Port portIn, Port portOut){
+        int bandwitdh;
         String name = nameConnectorField.getText();
-        if (name.isEmpty()){
+        String band = bandConnectorField.getText();
+        if (name.isEmpty() || band.isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Validation Error");
             alert.setContentText("The name must be not empty.");
             alert.show();
             return null;
         }
-        Connector connector = new Connector(name.trim(), portIn, portOut);
+        try {
+            bandwitdh = Integer.parseInt(band);
+        }catch (NumberFormatException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Validation Error");
+            alert.setContentText(e.getMessage());
+            alert.show();
+            return null;
+        }
+        Connector connector = new Connector(name.trim(), portIn, portOut, bandwitdh);
         return connector;
     }
 }

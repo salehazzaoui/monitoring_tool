@@ -2,7 +2,9 @@ package models;
 
 import utils.TypePort;
 
-public class Port {
+import java.io.Serializable;
+
+public class Port extends ArchitecturalElement implements Serializable {
     private String name;
     private TypePort type;
 

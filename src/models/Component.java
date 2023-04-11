@@ -2,21 +2,28 @@ package models;
 
 import utils.TypePort;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Component {
+public class Component extends ArchitecturalElement implements Serializable {
     private String name;
+    private int memoryConsummation;
+    private Configuration configuration;
+    public ArrayList<Component> components = new ArrayList<>();
+    public ArrayList<Port> ports = new ArrayList<>();
+    public ArrayList<Method> methods = new ArrayList<>();
+    private ComponentConstraint constraint;
+
     private double width;
     private double height;
     private double X;
     private double Y;
 
-    public ArrayList<Component> components = new ArrayList<>();
-    public ArrayList<Port> ports = new ArrayList<>();
-
-    public Component(String name) {
+    public Component(String name, int memoryConsummation, Configuration configuration) {
         this.name = name;
+        this.memoryConsummation = memoryConsummation;
+        this.configuration = configuration;
         height = 100;
         width = 120;
     }
@@ -75,5 +82,21 @@ public class Component {
 
     public ArrayList<Component> getComponents() {
         return components;
+    }
+
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+    public ComponentConstraint getConstraint() {
+        return constraint;
+    }
+
+    public void setConstraint(ComponentConstraint constraint) {
+        this.constraint = constraint;
     }
 }

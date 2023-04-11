@@ -5,13 +5,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.Dialog;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import models.*;
 import utils.*;
 import widgets.Arrow;
@@ -24,7 +20,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class MainController implements Initializable {
     @FXML
@@ -376,5 +371,127 @@ public class MainController implements Initializable {
         }else {
             System.out.println("CANCEL");
         }
+    }
+
+    public void addMethod(ActionEvent actionEvent) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.initOwner(mainPane.getScene().getWindow());
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("../views/newMethod.fxml"));
+        try{
+            dialog.getDialogPane().setContent(fxmlLoader.load());
+        }catch (Exception e){
+            e.printStackTrace();
+            return;
+        }
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+        NewMethodController controller = fxmlLoader.getController();
+        ChoiceBox<String> componentChoice = controller.getComponent();
+        model = Model.getInstance();
+        String currentConfName = tabPane.getSelectionModel().getSelectedItem().getText();
+        Configuration currentConf = model.configurations
+                .stream()
+                .filter(configuration -> configuration.getName().equals(currentConfName)).toList().get(0);
+        for (Component component:
+                currentConf.getComponents()) {
+            componentChoice.getItems().add(component.getName());
+        }
+
+        Optional<ButtonType> result = dialog.showAndWait();
+        if(result.isPresent() && result.get() == ButtonType.OK){
+            System.out.println("OK");
+            String compName = componentChoice.getSelectionModel().getSelectedItem();
+            Component component = null;
+            try {
+                component = currentConf.getCompByName(compName);
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Validation Error");
+                alert.setContentText("All fields are required");
+                alert.show();
+                return;
+            }
+            if(controller.addMethod(component)){
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setContentText("Method added successfully.");
+                alert.show();
+            }
+        }else {
+            System.out.println("CANCEL");
+        }
+    }
+
+    public void addNonFunctionalConstraint(ActionEvent actionEvent) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.initOwner(mainPane.getScene().getWindow());
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("../views/newConstraint.fxml"));
+        try{
+            dialog.getDialogPane().setContent(fxmlLoader.load());
+        }catch (Exception e){
+            e.printStackTrace();
+            return;
+        }
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+        NewConstraintController controller = fxmlLoader.getController();
+        TabPane tabPaneConstraint = controller.getTabPane();
+        ChoiceBox<String> componentChoice = controller.getComponentChoice();
+        ChoiceBox<String> connectorChoice = controller.getConnectorChoice();
+        model = Model.getInstance();
+        String currentConfName = tabPane.getSelectionModel().getSelectedItem().getText();
+        Configuration currentConf = model.configurations
+                .stream()
+                .filter(configuration -> configuration.getName().equals(currentConfName)).toList().get(0);
+        for (Component component:
+                currentConf.getComponents()) {
+            componentChoice.getItems().add(component.getName());
+        }
+
+        for (Connector connector:
+                currentConf.getConnectors()) {
+            connectorChoice.getItems().add(connector.getName());
+        }
+
+        Optional<ButtonType> result = dialog.showAndWait();
+        if(result.isPresent() && result.get() == ButtonType.OK){
+            System.out.println("OK");
+            if (tabPaneConstraint.getSelectionModel().getSelectedItem().getText().equals("Component")){
+                String componentName = componentChoice.getSelectionModel().getSelectedItem();
+                try {
+                    Component component = currentConf.getCompByName(componentName);
+                    this.addConstraintToComponent(controller, component);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return;
+                }
+            } else {
+                String connectorName = connectorChoice.getSelectionModel().getSelectedItem();
+                try {
+                    Connector connector = currentConf.getConnectorByName(connectorName);
+                    this.addConstraintToConnector(controller, connector);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return;
+                }
+            }
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setContentText("Constraint added successfully.");
+            alert.show();
+        }else {
+            System.out.println("CANCEL");
+        }
+    }
+
+    private void addConstraintToComponent(NewConstraintController controller, Component component){
+        controller.addComponentConstraint(component);
+    }
+    private void addConstraintToConnector(NewConstraintController controller, Connector connector){
+        controller.addConnectorConstraint(connector);
     }
 }

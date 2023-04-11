@@ -43,8 +43,8 @@
             <Button fx:id="addConf" mnemonicParsing="false" onAction="#addNewConf" text="Add Configuratuion" />
             <Button fx:id="addCom" mnemonicParsing="false" onAction="#addNewComponent" text="Add Component" />
             <Button fx:id="addConnector" mnemonicParsing="false" onAction="#addNewConnector" text="Add Connector" />
-            <Button mnemonicParsing="false" text="Add Attribute" />
-            <Button mnemonicParsing="false" text="Add Methode" />
+            <Button fx:id="addNonFConstraint" mnemonicParsing="false" onAction="#addNonFunctionalConstraint" text="Non-Functional Constraint" />
+            <Button fx:id="addmethod" mnemonicParsing="false" onAction="#addMethod" text="Add Methode" />
             <MenuButton mnemonicParsing="false" text="Check Architecture">
               <items>
                 <MenuItem fx:id="structBtn" mnemonicParsing="false" onAction="#checkStructural" text="Structural" />

@@ -37,6 +37,18 @@ public class Configuration extends ArchitecturalElement implements Serializable 
         }
     }
 
+    public Connector getConnectorByName(String name) throws Exception {
+        int i = 0;
+        while (!connectors.get(i).getName().trim().equals(name.trim())){
+            i++;
+        }
+        if (i < connectors.size()){
+            return connectors.get(i);
+        }else {
+            throw new Exception("not match name");
+        }
+    }
+
     public ArrayList<Connector> getConnectors() {
         return connectors;
     }

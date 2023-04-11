@@ -25,7 +25,7 @@
     <content>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="320.0">
          <children>
-            <GridPane layoutY="-4.0" prefHeight="200.0" prefWidth="457.0">
+            <GridPane layoutY="-4.0" prefHeight="150.0" prefWidth="458.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="235.20001220703125" minWidth="10.0" prefWidth="90.39998779296874" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="412.0" minWidth="10.0" prefWidth="368.0000122070312" />
@@ -46,12 +46,12 @@
                         <Insets right="10.0" />
                      </padding>
                   </TextField>
-                  <Label prefHeight="32.0" prefWidth="90.0" text="Configuration" GridPane.rowIndex="1">
+                  <Label prefHeight="32.0" prefWidth="90.0" text="Configuration" GridPane.rowIndex="2">
                      <padding>
                         <Insets left="10.0" />
                      </padding>
                   </Label>
-                  <ChoiceBox fx:id="configurationsChoice" prefHeight="26.0" prefWidth="369.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <ChoiceBox fx:id="configurationsChoice" prefHeight="26.0" prefWidth="369.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
@@ -59,6 +59,16 @@
                         <Insets right="10.0" />
                      </padding>
                   </ChoiceBox>
+                  <Label layoutX="10.0" layoutY="13.0" prefHeight="43.0" prefWidth="107.0" text="Memory Cons" GridPane.rowIndex="1">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="memoryConsComp" layoutX="100.0" layoutY="22.0" prefHeight="26.0" prefWidth="383.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <padding>
+                        <Insets right="10.0" />
+                     </padding>
+                  </TextField>
                </children>
             </GridPane>
          </children></AnchorPane>
