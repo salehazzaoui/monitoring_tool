@@ -34,7 +34,7 @@ public class AddNewPort {
             alert.show();
             return null;
         }
-        Port port = new Port(name.trim());
+        Port port = new Port(name.trim(), component);
         component.getPorts().add(port);
         port.setType(TypePort.valueOf(portType));
 

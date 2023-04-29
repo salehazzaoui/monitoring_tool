@@ -1,6 +1,6 @@
 package controllers;
 
-import com.uppaal.model.core2.Document;
+import com.uppaal.model.core2.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -51,6 +51,14 @@ public class MainController implements Initializable {
     private int count = 0;
     private ArrayList<PortBlock> portOutBlocks = new ArrayList<>();
     private ArrayList<PortBlock> portInBlocks = new ArrayList<>();
+
+    private StringBuilder globalDeclaration;
+    private ArrayList<String> systemDeclaration;
+    private ArrayList<Port> portsDone;
+    private ArrayList<Component> componentsDone;
+    private ArrayList<Location> initialLocations;
+
+    private int countReceive = 0, countSend = 0, y = 0;;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -173,7 +181,7 @@ public class MainController implements Initializable {
         }
     }
 
-    public void checkStructural(ActionEvent actionEvent) {
+    public boolean checkStructural(ActionEvent actionEvent) {
         model = Model.getInstance();
         ArrayList<Configuration> configurations = model.configurations;
         File file = new File("architecture.xml");
@@ -235,19 +243,301 @@ public class MainController implements Initializable {
             resTextArea.setText(String.valueOf(message));
             resTextArea.setStyle("-fx-text-fill: red;");
         }
+        return isValidXML;
     }
 
+    /**
+     * TODO: Not completed yet
+     * */
     public void checkBehavioral(ActionEvent actionEvent) {
-        Document doc = Uppaal.createSampleModel();
+        boolean isValidStruct = this.checkStructural(actionEvent);
+        if (!isValidStruct){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("The structure is not valid.");
+            alert.show();
+            return;
+        }
+        systemDeclaration = new ArrayList<>();
+        globalDeclaration = new StringBuilder();
+        portsDone = new ArrayList<>();
+        componentsDone = new ArrayList<>();
+        initialLocations = new ArrayList<>();
+        countSend = 0;
+        countReceive = 0;
+        // create a new Uppaal model with default properties:
+        Document doc = new Document(new PrototypeDocument());
+        globalDeclaration.append("int band = 0, consummation = 0;\n\nclock t;\n");
+        // get current configuration
+        model = Model.getInstance();
+        String currentConfName = tabPane.getSelectionModel().getSelectedItem().getText();
+        Configuration currentConf = model.configurations
+                .stream()
+                .filter(configuration -> configuration.getName().equals(currentConfName)).toList().get(0);
+
+        ArrayList<Component> components = currentConf.getComponents();
+        ArrayList<Connector> connectorsDid = new ArrayList<>();
+        int i = 0;
+        while (components.get(i).getPorts().stream().filter(port -> (port.getType().equals(TypePort.OUT) && port.getConnector() != null)).count() == 0){
+            i++;
+        }
+
+        buildAutomata(doc, components.get(i));
+
+        // add global variables:
+        doc.setProperty("declaration", String.valueOf(globalDeclaration));
+        // add system variables:
+        StringBuilder sv = new StringBuilder();
+        int c = 0;
+        for (String var:
+             systemDeclaration) {
+            sv.append(var+""+c+"="+var+"();\n");
+            c++;
+        }
+        sv.append("system ");
+        c = 0;
+        for (int j = 0, systemDeclarationSize = systemDeclaration.size() - 1; j < systemDeclarationSize; j++) {
+            String var = systemDeclaration.get(j);
+            sv.append(var+""+c+ ",");
+            c++;
+        }
+        sv.append(systemDeclaration.get(systemDeclaration.size() - 1)+""+c+";");
+        doc.setProperty("system", String.valueOf(sv));
+
         try {
             doc.save("uppaal.xml");
             String uppaalPath = EV.uppaalPath;
             String modelPath = EV.modelPath;
             String command = "\""+uppaalPath+"\" \""+new File(modelPath).getAbsolutePath()+"\"";
             Process process = Runtime.getRuntime().exec(command);
-        }catch (IOException e){
-            e.printStackTrace();
+        }catch (IOException exception){
+            exception.printStackTrace();
         }
+    }
+
+    private void buildAutomata(Document doc, Component component){
+        Template template;
+        Location l0;
+        if (componentsDone.contains(component)){
+            template = (Template) doc.getTemplate(component.getName());
+            l0 = initialLocations.stream().filter(location -> location.getName().equals(component.getName())).toList().get(0);
+        }else {
+            template = doc.createTemplate();
+            doc.insert(template, null);
+            template.setProperty("name", component.getName());
+            systemDeclaration.add(component.getName());
+            l0 = Uppaal.addLocation(template, component.getName(), null, 0, 0);
+            l0.setProperty("init", true);
+            initialLocations.add(l0);
+        }
+        componentsDone.add(component);
+        if(countSend == 0){
+            for (Port portOut : component.getPortsOut()) {
+                if (portsDone.contains(portOut)) continue;
+                portsDone.add(portOut);
+                Location l1 = Uppaal.addLocation(template, null, null, 150, y);
+                Edge e = Uppaal.addEdge(template, l0, l1, "t<" + component.getConstraint().getTime(), "x" + countSend + "!", null);
+                Nail nail = e.createNail();
+                nail.setProperty("x", -70);
+                nail.setProperty("y", 25);
+                e.insert(nail, null);
+                if (portOut.getConnector() != null) {
+                    Uppaal.addEdge(template, l1, l0, null, null, null);
+                }
+                y = y + 50;
+                globalDeclaration.append("chan x" + countSend + ";\n");
+                countSend++;
+
+                // port out automata
+                Template t = doc.createTemplate();
+                t.setProperty("name", portOut.getName());
+                doc.insert(t, null);
+                systemDeclaration.add(portOut.getName());
+
+                Location l2 = Uppaal.addLocation(t, portOut.getName(), null, 0, 0);
+                l2.setProperty("init", true);
+                Location l3 = Uppaal.addLocation(t, null, null, 100, 0);
+                Location l4 = Uppaal.addLocation(t, null, null, 200, 0);
+
+                Uppaal.addEdge(t, l2, l3, null, "x"+countReceive+"?", null);
+                Uppaal.addEdge(t, l3, l4, null, "x"+countSend+"!", null);
+
+                globalDeclaration.append("chan x"+countSend+";\n");
+                countReceive++;
+                countSend++;
+
+                // connector automata
+                Connector connector = portOut.getConnector();
+                if (connector != null) {
+                    Template tc = doc.createTemplate();
+                    tc.setProperty("name", connector.getName());
+                    doc.insert(tc, null);
+                    systemDeclaration.add(connector.getName());
+
+                    Location l5 = Uppaal.addLocation(tc, connector.getName(), null, 0, 0);
+                    l5.setProperty("init", true);
+                    Location l6 = Uppaal.addLocation(tc, null, null, 0, 150);
+                    Location l7 = Uppaal.addLocation(tc, null, null, 150, 0);
+
+                    Uppaal.addEdge(tc, l5, l6, "band<" + connector.getConstraint().getBandwidth(), "x" + countReceive + "?", null);
+                    Uppaal.addEdge(tc, l6, l7, "band<" + connector.getConstraint().getBandwidth(), "x" + countSend + "!", null);
+
+                    globalDeclaration.append("chan x" + countSend + ";\n");
+                    countReceive++;
+                    countSend++;
+
+                    // port in automata
+                    Port portIn = connector.getPortIn();
+                    Template t1 = doc.createTemplate();
+                    t1.setProperty("name", portIn.getName());
+                    doc.insert(t1, null);
+                    systemDeclaration.add(portIn.getName());
+
+                    Location l8 = Uppaal.addLocation(t1, portIn.getName(), "1", 0, 0);
+                    l8.setProperty("init", true);
+                    Location l9 = Uppaal.addLocation(t1, null, "1", 100, 0);
+                    Location l10 = Uppaal.addLocation(t1, null, "1", 200, 0);
+
+                    Uppaal.addEdge(t1, l8, l9, null, "x" + countReceive + "?", null);
+                    Uppaal.addEdge(t1, l9, l10, null, "x" + countSend + "!", null);
+
+                    globalDeclaration.append("chan x" + countSend + ";\n");
+                    countReceive++;
+                    countSend++;
+
+                    Component component1 = portIn.getComponent();
+                    buildAutomata(doc, component1);
+                }
+            }
+
+            for (Port portIn : component.getPortsIn()) {
+                if (portsDone.contains(portIn)) continue;
+                portsDone.add(portIn);
+                Location l11 = Uppaal.addLocation(template, null, null, 150, y);
+                Edge e1 = Uppaal.addEdge(template, l0, l11, "t<"+component.getConstraint().getTime(), "x" + countReceive + "?", null);
+                Nail nail1 = e1.createNail();
+                nail1.setProperty("x", 70);
+                nail1.setProperty("y", 25);
+                e1.insert(nail1, null);
+                if (portIn.getConnector() != null) {
+                    Uppaal.addEdge(template, l11, l0, "t<"+component.getConstraint().getTime(), null, null);
+                }
+                y = y + 50;
+                countReceive++;
+            }
+        }else {
+            for (Port portIn : component.getPortsIn()) {
+                if (portsDone.contains(portIn)) continue;
+                portsDone.add(portIn);
+                Location l11 = Uppaal.addLocation(template, null, null, 150, y);
+                Edge e1 = Uppaal.addEdge(template, l0, l11, "t<"+component.getConstraint().getTime(), "x" + countReceive + "?", null);
+                Nail nail1 = e1.createNail();
+                nail1.setProperty("x", 70);
+                nail1.setProperty("y", 25);
+                e1.insert(nail1, null);
+                if (portIn.getConnector() != null) {
+                    Uppaal.addEdge(template, l11, l0, "t<"+component.getConstraint().getTime(), null, null);
+                }
+                y = y + 50;
+                countReceive++;
+            }
+
+            for (Port portOut : component.getPortsOut()) {
+                if (portsDone.contains(portOut)) continue;
+                portsDone.add(portOut);
+                Location l1 = Uppaal.addLocation(template, null, null, 150, y);
+                Edge e = Uppaal.addEdge(template, l0, l1, "t<" + component.getConstraint().getTime(), "x" + countSend + "!", null);
+                Nail nail = e.createNail();
+                nail.setProperty("x", -70);
+                nail.setProperty("y", 25);
+                e.insert(nail, null);
+                if (portOut.getConnector() != null) {
+                    Uppaal.addEdge(template, l1, l0, null, null, null);
+                }
+                y = y + 50;
+                globalDeclaration.append("chan x" + countSend + ";\n");
+                countSend++;
+
+                // port out automata
+                Template t = doc.createTemplate();
+                t.setProperty("name", portOut.getName());
+                doc.insert(t, null);
+                systemDeclaration.add(portOut.getName());
+
+                Location l2 = Uppaal.addLocation(t, portOut.getName(), null, 0, 0);
+                l2.setProperty("init", true);
+                Location l3 = Uppaal.addLocation(t, null, null, 100, 0);
+                Location l4 = Uppaal.addLocation(t, null, null, 200, 0);
+
+                Uppaal.addEdge(t, l2, l3, null, "x"+countReceive+"?", null);
+                Uppaal.addEdge(t, l3, l4, null, "x"+countSend+"!", null);
+
+                globalDeclaration.append("chan x"+countSend+";\n");
+                countReceive++;
+                countSend++;
+
+                // connector automata
+                Connector connector = portOut.getConnector();
+                if (connector != null) {
+                    Template tc = doc.createTemplate();
+                    tc.setProperty("name", connector.getName());
+                    doc.insert(tc, null);
+                    systemDeclaration.add(connector.getName());
+
+                    Location l5 = Uppaal.addLocation(tc, connector.getName(), null, 0, 0);
+                    l5.setProperty("init", true);
+                    Location l6 = Uppaal.addLocation(tc, null, null, 0, 150);
+                    Location l7 = Uppaal.addLocation(tc, null, null, 150, 0);
+
+                    Uppaal.addEdge(tc, l5, l6, "band<" + connector.getConstraint().getBandwidth(), "x" + countReceive + "?", null);
+                    Uppaal.addEdge(tc, l6, l7, "band<" + connector.getConstraint().getBandwidth(), "x" + countSend + "!", null);
+
+                    globalDeclaration.append("chan x" + countSend + ";\n");
+                    countReceive++;
+                    countSend++;
+
+                    // port in automata
+                    Port portIn = connector.getPortIn();
+                    Template t1 = doc.createTemplate();
+                    t1.setProperty("name", portIn.getName());
+                    doc.insert(t1, null);
+                    systemDeclaration.add(portIn.getName());
+
+                    Location l8 = Uppaal.addLocation(t1, portIn.getName(), "1", 0, 0);
+                    l8.setProperty("init", true);
+                    Location l9 = Uppaal.addLocation(t1, null, "1", 100, 0);
+                    Location l10 = Uppaal.addLocation(t1, null, "1", 200, 0);
+
+                    Uppaal.addEdge(t1, l8, l9, null, "x" + countReceive + "?", null);
+                    Uppaal.addEdge(t1, l9, l10, null, "x" + countSend + "!", null);
+
+                    globalDeclaration.append("chan x" + countSend + ";\n");
+                    countReceive++;
+                    countSend++;
+
+                    Component component1 = portIn.getComponent();
+                    buildAutomata(doc, component1);
+                }
+            }
+        }
+
+        //}
+
+        /*for (Port portIn : component.getPortsIn()) {
+            if (portsDone.contains(portIn)) continue;
+            portsDone.add(portIn);
+            Location l1 = Uppaal.addLocation(template, null, null, 150, y);
+            Edge e = Uppaal.addEdge(template, l0, l1, "t<"+component.getConstraint().getTime(), "x" + countReceive + "?", null);
+            Nail nail = e.createNail();
+            nail.setProperty("x", 70);
+            nail.setProperty("y", 25);
+            e.insert(nail, null);
+            if (portIn.getConnector() != null) {
+                Uppaal.addEdge(template, l1, l0, "t<"+component.getConstraint().getTime(), null, null);
+            }
+            y = y + 50;
+            countReceive++;
+        }*/
     }
 
     /**
@@ -334,6 +624,8 @@ public class MainController implements Initializable {
             Connector connector =  controller.addConnector(portIn, portOut);
             if (connector == null) return;
             currentConf.connectors.add(connector);
+            portIn.setConnector(connector);
+            portOut.setConnector(connector);
 
             ScrollPane scrollPane = (ScrollPane) tabPane.getSelectionModel().getSelectedItem().getContent();
             AnchorPane anchorPane = (AnchorPane) scrollPane.getContent();

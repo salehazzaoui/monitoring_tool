@@ -8,4 +8,20 @@ public class ConnectorConstraint extends Constraint{
         this.time = time;
         this.bandwidth = bandwidth;
     }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    public int getBandwidth() {
+        return bandwidth;
+    }
+
+    public void setBandwidth(int bandwidth) {
+        this.bandwidth = bandwidth;
+    }
 }

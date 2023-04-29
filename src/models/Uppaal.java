@@ -1,4 +1,4 @@
-package utils;
+package models;
 
 import com.uppaal.engine.CannotEvaluateException;
 import com.uppaal.engine.Engine;

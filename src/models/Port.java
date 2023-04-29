@@ -7,14 +7,17 @@ import java.io.Serializable;
 public class Port extends ArchitecturalElement implements Serializable {
     private String name;
     private TypePort type;
+    private Component component;
+    private Connector connector;
 
     private double width;
     private double height;
     private double X;
     private double Y;
 
-    public Port(String name){
+    public Port(String name, Component component){
         this.name = name;
+        this.component = component;
     }
 
     public String getName() {
@@ -63,6 +66,22 @@ public class Port extends ArchitecturalElement implements Serializable {
 
     public void setY(double y) {
         Y = y;
+    }
+
+    public Connector getConnector() {
+        return connector;
+    }
+
+    public void setConnector(Connector connector) {
+        this.connector = connector;
+    }
+
+    public Component getComponent() {
+        return component;
+    }
+
+    public void setComponent(Component component) {
+        this.component = component;
     }
 }
 
