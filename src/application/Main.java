@@ -1,12 +1,25 @@
 package application;
 
+import csp.CSPProcessAlgebraBaseListener;
+import csp.CSPProcessAlgebraLexer;
+import csp.CSPProcessAlgebraListener;
+import csp.CSPProcessAlgebraParser;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;;
 import javafx.stage.Stage;
-import widgets.ComponentBlock;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Main extends Application {
 
@@ -26,111 +39,43 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
-    }
-}
-/*
-import javafx.application.Application;
-import javafx.beans.property.*;
-import javafx.event.EventHandler;
-import javafx.scene.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
-import javafx.stage.Stage;
+        /*
+        // create the input stream
+        //ANTLRInputStream input = new ANTLRInputStream("process P { a!x -> b!y -> skip }");
+        CharStream stream = CharStreams.fromString("P = a!x -> b!y -> skip");
 
+        // create the lexer
+        CSPProcessAlgebraLexer lexer = new CSPProcessAlgebraLexer(stream);
 
-public class Main extends Application {
-    public static void main(String[] args) throws Exception { launch(args); }
-    @Override public void start(final Stage stage) throws Exception {
-        DoubleProperty startX = new SimpleDoubleProperty(100);
-        DoubleProperty startY = new SimpleDoubleProperty(100);
-        DoubleProperty endX   = new SimpleDoubleProperty(300);
-        DoubleProperty endY   = new SimpleDoubleProperty(200);
+        // create the token stream
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-        Anchor start    = new Anchor(Color.PALEGREEN, startX, startY);
-        Anchor end      = new Anchor(Color.TOMATO,    endX,   endY);
+        // create the parser
+        CSPProcessAlgebraParser parser = new CSPProcessAlgebraParser(tokens);
 
-        Line line = new BoundLine(startX, startY, endX, endY);
-        stage.setTitle("Line Manipulation Sample");
-        stage.setScene(new Scene(new Group(line, start, end), 400, 400, Color.ALICEBLUE));
-        stage.show();
-    }
+        // parse the input and get the AST
+        CSPProcessAlgebraParser.ProcessContext processContext = parser.process();
 
-    class BoundLine extends Line {
-        BoundLine(DoubleProperty startX, DoubleProperty startY, DoubleProperty endX, DoubleProperty endY) {
-            startXProperty().bind(startX);
-            startYProperty().bind(startY);
-            endXProperty().bind(endX);
-            endYProperty().bind(endY);
-            setStrokeWidth(2);
-            setStroke(Color.GRAY.deriveColor(0, 1, 1, 0.5));
-            setStrokeLineCap(StrokeLineCap.BUTT);
-            getStrokeDashArray().setAll(10.0, 5.0);
-            setMouseTransparent(true);
-        }
-    }
+        // print the AST
+        System.out.println(processContext.toStringTree(parser));
 
-    // a draggable anchor displayed around a point.
-    class Anchor extends Circle {
-        Anchor(Color color, DoubleProperty x, DoubleProperty y) {
-            super(x.get(), y.get(), 10);
-            setFill(color.deriveColor(1, 1, 1, 0.5));
-            setStroke(color);
-            setStrokeWidth(2);
-            setStrokeType(StrokeType.OUTSIDE);
+        // get the list of events from the process
+        List<CSPProcessAlgebraParser.EventContext> events = processContext.statements().statement()
+                .stream()
+                .filter(statement -> statement.event() != null)
+                .map(CSPProcessAlgebraParser.StatementContext::event)
+                .collect(Collectors.toList());
 
-            x.bind(centerXProperty());
-            y.bind(centerYProperty());
-            enableDrag();
+        // print out the events
+        for (CSPProcessAlgebraParser.EventContext event : events) {
+            System.out.println(event.getText());
         }
 
-        // make a node movable by dragging it around with the mouse.
-        private void enableDrag() {
-            final Delta dragDelta = new Delta();
-            setOnMousePressed(new EventHandler<MouseEvent>() {
-                @Override public void handle(MouseEvent mouseEvent) {
-                    // record a delta distance for the drag and drop operation.
-                    dragDelta.x = getCenterX() - mouseEvent.getX();
-                    dragDelta.y = getCenterY() - mouseEvent.getY();
-                    getScene().setCursor(Cursor.MOVE);
-                }
-            });
-            setOnMouseReleased(new EventHandler<MouseEvent>() {
-                @Override public void handle(MouseEvent mouseEvent) {
-                    getScene().setCursor(Cursor.HAND);
-                }
-            });
-            setOnMouseDragged(new EventHandler<MouseEvent>() {
-                @Override public void handle(MouseEvent mouseEvent) {
-                    double newX = mouseEvent.getX() + dragDelta.x;
-                    if (newX > 0 && newX < getScene().getWidth()) {
-                        setCenterX(newX);
-                    }
-                    double newY = mouseEvent.getY() + dragDelta.y;
-                    if (newY > 0 && newY < getScene().getHeight()) {
-                        setCenterY(newY);
-                    }
-                }
-            });
-            setOnMouseEntered(new EventHandler<MouseEvent>() {
-                @Override public void handle(MouseEvent mouseEvent) {
-                    if (!mouseEvent.isPrimaryButtonDown()) {
-                        getScene().setCursor(Cursor.HAND);
-                    }
-                }
-            });
-            setOnMouseExited(new EventHandler<MouseEvent>() {
-                @Override public void handle(MouseEvent mouseEvent) {
-                    if (!mouseEvent.isPrimaryButtonDown()) {
-                        getScene().setCursor(Cursor.DEFAULT);
-                    }
-                }
-            });
-        }
-
-        // records relative x and y co-ordinates.
-        private class Delta { double x, y; }
+        ParseTreeWalker walker = new ParseTreeWalker();
+        CSPProcessAlgebraListener listener = new CSPProcessAlgebraBaseListener();
+        walker.walk(listener, processContext);*/
     }
-}
-*/
+  }
+
+
 

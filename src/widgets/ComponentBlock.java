@@ -1,28 +1,21 @@
 package widgets;
 
 import controllers.AddNewPort;
-import javafx.event.Event;
+import controllers.NewGlobalCspController;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import models.Component;
-import models.Model;
-import models.Port;
+import models.*;
 import utils.TypePort;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class ComponentBlock extends Pane implements EventHandler<MouseEvent> {
     private Component component;
@@ -38,6 +31,8 @@ public class ComponentBlock extends Pane implements EventHandler<MouseEvent> {
 
     private double mouseAnchorX;
     private double mouseAnchorY;
+
+    private ContextMenu contextMenu;
 
     public ComponentBlock(Component component){
         this.component = component;
@@ -58,6 +53,49 @@ public class ComponentBlock extends Pane implements EventHandler<MouseEvent> {
             this.component.setX(this.getLayoutX());
             this.component.setY(this.getLayoutY());
         });
+
+        this.contextMenu = new ContextMenu();
+
+        MenuItem delete = new MenuItem("delete");
+        delete.setOnAction(ActionEvent -> {
+            AnchorPane anchorPane = (AnchorPane) this.getParent();
+            anchorPane.getChildren().remove(this);
+            Configuration.removeComponent(component);
+        });
+
+        MenuItem globalCsp = new MenuItem("Add Global CSP");
+        globalCsp.setOnAction(ActionEvent -> {
+            Dialog<ButtonType> dialog = new Dialog<>();
+            //dialog.initOwner(mainPane.getScene().getWindow());
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("../views/newGlobalCsp.fxml"));
+            try{
+                dialog.getDialogPane().setContent(fxmlLoader.load());
+            }catch (Exception e){
+                e.printStackTrace();
+                return;
+            }
+
+            NewGlobalCspController controller = fxmlLoader.getController();
+            Csp globalCspExp = component.getGlobalCsp();
+            if(globalCspExp != null){
+                controller.initNameTextField(globalCspExp.getName());
+                controller.initExpressionTextField(globalCspExp.getExpression());
+            }
+
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+            Optional<ButtonType> result = dialog.showAndWait();
+            if(result.isPresent() && result.get() == ButtonType.OK){
+                System.out.println("OK");
+                controller.addGlobalCsp(component);
+            }else {
+                System.out.println("CANCEL");
+            }
+        });
+
+        this.contextMenu.getItems().addAll(delete, globalCsp);
     }
 
     public Label updateHeader(String header){
@@ -153,6 +191,11 @@ public class ComponentBlock extends Pane implements EventHandler<MouseEvent> {
                     System.out.println("CANCEL");
                 }
             }
+        }else if(mouseEvent.getButton().equals(MouseButton.SECONDARY)){
+            if(contextMenu.isShowing()) contextMenu.hide();
+            this.setOnContextMenuRequested(event -> {
+                contextMenu.show(this, event.getScreenX(), event.getScreenY());
+            });
         }
     }
 

@@ -1,0 +1,13 @@
+(server, sp1, c1, cp1, client, band=0, consummation=0, t = 0)
+server0: server → , sp11: sp1 → 
+(🔾, 🔾, c1, cp1, client, band=0, consummation=0, t ≥ 0)
+server0:  → server
+(server, 🔾, c1, cp1, client, band=0, consummation=0, t ≥ 0)
+sp11:  → , c12: c1 → 
+(server, 🔾, 🔾, cp1, client, band=0, consummation=0, t ≥ 0)
+c12:  → , cp13: cp1 → 
+(server, 🔾, 🔾, 🔾, client, band=0, consummation=0, t ≥ 0)
+cp13:  → , client4: client → 
+(server, 🔾, 🔾, 🔾, 🔾, band=0, consummation=0, t ≥ 0)
+client4:  → client
+(server, 🔾, 🔾, 🔾, client, band=0, consummation=0, t ≥ 0)

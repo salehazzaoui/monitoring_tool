@@ -9,15 +9,18 @@ public class Port extends ArchitecturalElement implements Serializable {
     private TypePort type;
     private Component component;
     private Connector connector;
+    private Csp cspExpression;
+    private Csp cspExpressionModify;
 
     private double width;
     private double height;
     private double X;
     private double Y;
 
-    public Port(String name, Component component){
+    public Port(String name, Component component, Csp csp){
         this.name = name;
         this.component = component;
+        this.cspExpression = csp;
     }
 
     public String getName() {
@@ -82,6 +85,22 @@ public class Port extends ArchitecturalElement implements Serializable {
 
     public void setComponent(Component component) {
         this.component = component;
+    }
+
+    public Csp getCspExpression() {
+        return cspExpression;
+    }
+
+    public void setCspExpression(Csp cspExpression) {
+        this.cspExpression = cspExpression;
+    }
+
+    public Csp getCspExpressionModify() {
+        return cspExpressionModify;
+    }
+
+    public void setCspExpressionModify(Csp cspExpressionModify) {
+        this.cspExpressionModify = cspExpressionModify;
     }
 }
 

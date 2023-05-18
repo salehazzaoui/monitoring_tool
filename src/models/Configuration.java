@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Configuration extends ArchitecturalElement implements Serializable {
     private String name;
     public ArrayList<Configuration> configurations = new ArrayList<>();
-    public ArrayList<Component> components = new ArrayList<>();
+    public static ArrayList<Component> components = new ArrayList<>();
     public ArrayList<Connector> connectors = new ArrayList<>();
 
     public Configuration(String name) {
@@ -55,5 +55,9 @@ public class Configuration extends ArchitecturalElement implements Serializable 
 
     public ArrayList<Configuration> getConfigurations() {
         return configurations;
+    }
+
+    public static void removeComponent(Component component){
+        components.remove(component);
     }
 }

@@ -1,6 +1,12 @@
 package controllers;
 
+import com.uppaal.engine.CannotEvaluateException;
+import com.uppaal.engine.Engine;
+import com.uppaal.engine.EngineException;
 import com.uppaal.model.core2.*;
+import com.uppaal.model.system.UppaalSystem;
+import com.uppaal.model.system.symbolic.SymbolicTrace;
+import com.uppaal.model.system.symbolic.SymbolicTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Dialog;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import models.*;
 import utils.*;
 import widgets.Arrow;
@@ -36,6 +43,9 @@ public class MainController implements Initializable {
 
     @FXML
     private TextArea resTextArea;
+
+    @FXML
+    private MenuItem saveItem;
 
     private DraggableMaker draggableMaker;
 
@@ -278,7 +288,7 @@ public class MainController implements Initializable {
         ArrayList<Component> components = currentConf.getComponents();
         ArrayList<Connector> connectorsDid = new ArrayList<>();
         int i = 0;
-        while (components.get(i).getPorts().stream().filter(port -> (port.getType().equals(TypePort.OUT) && port.getConnector() != null)).count() == 0){
+        while (components.get(i).getPorts().stream().filter(port -> (port.getType().equals(TypePort.OUT) && port.getConnector() != null )).count() == 0){
             i++;
         }
 
@@ -303,6 +313,44 @@ public class MainController implements Initializable {
         }
         sv.append(systemDeclaration.get(systemDeclaration.size() - 1)+""+c+";");
         doc.setProperty("system", String.valueOf(sv));
+
+        try {
+            Engine engine = Uppaal.connectToEngine();
+            UppaalSystem uppaalSystem = Uppaal.compile(engine, doc);
+            SymbolicTrace trace = Uppaal.symbolicSimulation(engine, uppaalSystem);
+            if (trace == null) {
+                System.out.println("(null trace)");
+                return;
+            }
+            Iterator<SymbolicTransition> it = trace.iterator();
+            File file = new File("trace.txt");
+            BufferedWriter br = new BufferedWriter(new FileWriter(file));
+            Uppaal.printInFile(uppaalSystem, it.next().getTarget(), br);
+            br.close();
+            Timer timer = new Timer();
+            timer.scheduleAtFixedRate(new TimerTask() {
+                public void run() {
+                    try {
+                        BufferedWriter br = new BufferedWriter(new FileWriter(file, true));
+                        if (it.hasNext()) {
+                            Uppaal.printTracePas(uppaalSystem, it, br);
+                        } else {
+                            timer.cancel();
+                        }
+                        br.close();
+                    }catch(IOException e){
+                        e.printStackTrace();
+                    }
+                }
+            }, 0, 3000);
+            System.out.println();
+        } catch (EngineException e) {
+            e.printStackTrace();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        } catch (CannotEvaluateException e) {
+            e.printStackTrace();
+        }
 
         try {
             doc.save("uppaal.xml");
@@ -336,13 +384,18 @@ public class MainController implements Initializable {
                 if (portsDone.contains(portOut)) continue;
                 portsDone.add(portOut);
                 Location l1 = Uppaal.addLocation(template, null, null, 150, y);
-                Edge e = Uppaal.addEdge(template, l0, l1, "t<" + component.getConstraint().getTime(), "x" + countSend + "!", null);
+                Edge e = component.getConstraint() != null ? Uppaal.addEdge(template, l0, l1, "t<" + component.getConstraint().getTime(), "x" + countSend + "!", null)
+                                                           :Uppaal.addEdge(template, l0, l1, null, "x" + countSend + "!", null);
                 Nail nail = e.createNail();
                 nail.setProperty("x", -70);
                 nail.setProperty("y", 25);
                 e.insert(nail, null);
                 if (portOut.getConnector() != null) {
-                    Uppaal.addEdge(template, l1, l0, null, null, null);
+                    if (component.getConstraint() != null) {
+                        Uppaal.addEdge(template, l1, l0, "t<" + component.getConstraint().getTime(), null, null);
+                    } else {
+                        Uppaal.addEdge(template, l1, l0, null, null, null);
+                    }
                 }
                 y = y + 50;
                 globalDeclaration.append("chan x" + countSend + ";\n");
@@ -379,8 +432,13 @@ public class MainController implements Initializable {
                     Location l6 = Uppaal.addLocation(tc, null, null, 0, 150);
                     Location l7 = Uppaal.addLocation(tc, null, null, 150, 0);
 
-                    Uppaal.addEdge(tc, l5, l6, "band<" + connector.getConstraint().getBandwidth(), "x" + countReceive + "?", null);
-                    Uppaal.addEdge(tc, l6, l7, "band<" + connector.getConstraint().getBandwidth(), "x" + countSend + "!", null);
+                    if (connector.getConstraint() != null){
+                        Uppaal.addEdge(tc, l5, l6, "band<" + connector.getConstraint().getBandwidth(), "x" + countReceive + "?", null);
+                        Uppaal.addEdge(tc, l6, l7, "band<" + connector.getConstraint().getBandwidth(), "x" + countSend + "!", null);
+                    }else {
+                        Uppaal.addEdge(tc, l5, l6, null, "x" + countReceive + "?", null);
+                        Uppaal.addEdge(tc, l6, l7, null, "x" + countSend + "!", null);
+                    }
 
                     globalDeclaration.append("chan x" + countSend + ";\n");
                     countReceive++;
@@ -414,13 +472,18 @@ public class MainController implements Initializable {
                 if (portsDone.contains(portIn)) continue;
                 portsDone.add(portIn);
                 Location l11 = Uppaal.addLocation(template, null, null, 150, y);
-                Edge e1 = Uppaal.addEdge(template, l0, l11, "t<"+component.getConstraint().getTime(), "x" + countReceive + "?", null);
+                Edge e1 = component.getConstraint() != null ? Uppaal.addEdge(template, l0, l11, "t<"+component.getConstraint().getTime(), "x" + countReceive + "?", null)
+                                                            : Uppaal.addEdge(template, l0, l11, null, "x" + countReceive + "?", null);
                 Nail nail1 = e1.createNail();
                 nail1.setProperty("x", 70);
                 nail1.setProperty("y", 25);
                 e1.insert(nail1, null);
                 if (portIn.getConnector() != null) {
-                    Uppaal.addEdge(template, l11, l0, "t<"+component.getConstraint().getTime(), null, null);
+                    if (component.getConstraint() != null) {
+                        Uppaal.addEdge(template, l11, l0, "t<" + component.getConstraint().getTime(), null, null);
+                    } else {
+                        Uppaal.addEdge(template, l11, l0, null, null, null);
+                    }
                 }
                 y = y + 50;
                 countReceive++;
@@ -430,13 +493,18 @@ public class MainController implements Initializable {
                 if (portsDone.contains(portIn)) continue;
                 portsDone.add(portIn);
                 Location l11 = Uppaal.addLocation(template, null, null, 150, y);
-                Edge e1 = Uppaal.addEdge(template, l0, l11, "t<"+component.getConstraint().getTime(), "x" + countReceive + "?", null);
+                Edge e1 = component.getConstraint() != null ? Uppaal.addEdge(template, l0, l11, "t<"+component.getConstraint().getTime(), "x" + countReceive + "?", null)
+                                                            : Uppaal.addEdge(template, l0, l11, null, "x" + countReceive + "?", null);
                 Nail nail1 = e1.createNail();
                 nail1.setProperty("x", 70);
                 nail1.setProperty("y", 25);
                 e1.insert(nail1, null);
                 if (portIn.getConnector() != null) {
-                    Uppaal.addEdge(template, l11, l0, "t<"+component.getConstraint().getTime(), null, null);
+                    if (component.getConstraint() != null) {
+                        Uppaal.addEdge(template, l11, l0, "t<" + component.getConstraint().getTime(), null, null);
+                    } else {
+                        Uppaal.addEdge(template, l11, l0, null, null, null);
+                    }
                 }
                 y = y + 50;
                 countReceive++;
@@ -446,13 +514,18 @@ public class MainController implements Initializable {
                 if (portsDone.contains(portOut)) continue;
                 portsDone.add(portOut);
                 Location l1 = Uppaal.addLocation(template, null, null, 150, y);
-                Edge e = Uppaal.addEdge(template, l0, l1, "t<" + component.getConstraint().getTime(), "x" + countSend + "!", null);
+                Edge e = component.getConstraint() != null ? Uppaal.addEdge(template, l0, l1, "t<"+component.getConstraint().getTime(), "x" + countSend + "?", null)
+                        : Uppaal.addEdge(template, l0, l1, null, "x" + countSend + "?", null);
                 Nail nail = e.createNail();
                 nail.setProperty("x", -70);
                 nail.setProperty("y", 25);
                 e.insert(nail, null);
                 if (portOut.getConnector() != null) {
-                    Uppaal.addEdge(template, l1, l0, null, null, null);
+                    if (component.getConstraint() != null) {
+                        Uppaal.addEdge(template, l1, l0, "t<" + component.getConstraint().getTime(), null, null);
+                    } else {
+                        Uppaal.addEdge(template, l1, l0, null, null, null);
+                    }
                 }
                 y = y + 50;
                 globalDeclaration.append("chan x" + countSend + ";\n");
@@ -489,9 +562,13 @@ public class MainController implements Initializable {
                     Location l6 = Uppaal.addLocation(tc, null, null, 0, 150);
                     Location l7 = Uppaal.addLocation(tc, null, null, 150, 0);
 
-                    Uppaal.addEdge(tc, l5, l6, "band<" + connector.getConstraint().getBandwidth(), "x" + countReceive + "?", null);
-                    Uppaal.addEdge(tc, l6, l7, "band<" + connector.getConstraint().getBandwidth(), "x" + countSend + "!", null);
-
+                    if (connector.getConstraint() != null){
+                        Uppaal.addEdge(tc, l5, l6, "band<" + connector.getConstraint().getBandwidth(), "x" + countReceive + "?", null);
+                        Uppaal.addEdge(tc, l6, l7, "band<" + connector.getConstraint().getBandwidth(), "x" + countSend + "!", null);
+                    }else {
+                        Uppaal.addEdge(tc, l5, l6, null, "x" + countReceive + "?", null);
+                        Uppaal.addEdge(tc, l6, l7, null, "x" + countSend + "!", null);
+                    }
                     globalDeclaration.append("chan x" + countSend + ";\n");
                     countReceive++;
                     countSend++;
@@ -520,24 +597,6 @@ public class MainController implements Initializable {
                 }
             }
         }
-
-        //}
-
-        /*for (Port portIn : component.getPortsIn()) {
-            if (portsDone.contains(portIn)) continue;
-            portsDone.add(portIn);
-            Location l1 = Uppaal.addLocation(template, null, null, 150, y);
-            Edge e = Uppaal.addEdge(template, l0, l1, "t<"+component.getConstraint().getTime(), "x" + countReceive + "?", null);
-            Nail nail = e.createNail();
-            nail.setProperty("x", 70);
-            nail.setProperty("y", 25);
-            e.insert(nail, null);
-            if (portIn.getConnector() != null) {
-                Uppaal.addEdge(template, l1, l0, "t<"+component.getConstraint().getTime(), null, null);
-            }
-            y = y + 50;
-            countReceive++;
-        }*/
     }
 
     /**
@@ -606,6 +665,16 @@ public class MainController implements Initializable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        });
+
+        portInChoice.setOnAction(ActionEvent -> {
+            Port portIn =  portsIn.stream().filter(port -> port.getName().equals(portInChoice.getValue())).toList().get(0);
+            controller.initCspInField(portIn.getCspExpression().getExpression());
+        });
+
+        portOutChoice.setOnAction(ActionEvent -> {
+            Port portOut =  portsOut.stream().filter(port -> port.getName().equals(portOutChoice.getValue())).toList().get(0);
+            controller.initCspOutField(portOut.getCspExpression().getExpression());
         });
 
         Optional<ButtonType> result = dialog.showAndWait();
@@ -785,5 +854,73 @@ public class MainController implements Initializable {
     }
     private void addConstraintToConnector(NewConstraintController controller, Connector connector){
         controller.addConnectorConstraint(connector);
+    }
+
+    public void saveFile(ActionEvent actionEvent) {
+        model = Model.getInstance();
+        String currentConfName = tabPane.getSelectionModel().getSelectedItem().getText();
+        Configuration currentConf = model.configurations
+                .stream()
+                .filter(configuration -> configuration.getName().equals(currentConfName)).toList().get(0);
+        //Creating a File chooser
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
+        //Adding action on the menu item
+        File file = fileChooser.showSaveDialog(mainPane.getScene().getWindow());
+        if(file != null){
+            this.saveContentToFile(currentConf, file);
+        }
+    }
+
+    private void saveContentToFile(Configuration configuration, File file) {
+        try {
+            BufferedWriter br = new BufferedWriter(new FileWriter(file));
+
+            br.write("<Configuration name=\""+configuration.getName()+"\">"); br.newLine();
+            for (Component component:
+                    configuration.getComponents()) {
+                br.write("<Component memory=\""+component.getMemoryConsummation()+"\">"); br.newLine();
+                br.write("<name>"+ component.getName() +"</name>"); br.newLine();
+                for (Method method : component.getMethods()){
+                    br.write("<Method time=\""+method.getExecutionTime()+"\">"); br.newLine();
+                    br.write("<name>"+ method.getName() +"</name>"); br.newLine();
+                    br.write("</Method>"); br.newLine();
+                }
+                for (Port port:
+                        component.getPorts()) {
+                    br.write("<Port>"); br.newLine();
+                    br.write("<name>"+ port.getName() +"</name>"); br.newLine();
+                    br.write("<type>"+ port.getType() +"</type>"); br.newLine();
+                    br.write("</Port>"); br.newLine();
+                }
+                if(component.getConstraint() != null){
+                    br.write("<Constraint>"); br.newLine();
+                    br.write("<time>"+ component.getConstraint().getTime() +"</time>"); br.newLine();
+                    br.write("<memory>"+ component.getConstraint().getMemory() +"</memory>"); br.newLine();
+                    br.write("</Constraint>"); br.newLine();
+                }
+                br.write("</Component>"); br.newLine();
+            }
+            for (Connector connector:
+                    configuration.getConnectors()) {
+                br.write("<Connector>"); br.newLine();
+                br.write("<name>"+ connector.getName() +"</name>"); br.newLine();
+                br.write("<Port_In>"); br.newLine();
+                br.write("<name>"+ connector.getPortIn().getName() +"</name>"); br.newLine();
+                br.write("<type>"+ connector.getPortIn().getType() +"</type>"); br.newLine();
+                br.write("</Port_In>"); br.newLine();
+                br.write("<Port_Out>"); br.newLine();
+                br.write("<name>"+ connector.getPortOut().getName() +"</name>"); br.newLine();
+                br.write("<type>"+ connector.getPortOut().getType() +"</type>"); br.newLine();
+                br.write("</Port_Out>"); br.newLine();
+                br.write("</Connector>"); br.newLine();
+            }
+            br.write("</Configuration>"); br.newLine();
+
+            br.close();
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+        }
     }
 }

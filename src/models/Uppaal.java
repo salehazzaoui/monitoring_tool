@@ -31,9 +31,8 @@ import com.uppaal.model.system.concrete.ConcreteState;
 import com.uppaal.model.system.concrete.ConcreteTransitionRecord;
 import com.uppaal.model.system.concrete.ConcreteTrace;
 import com.uppaal.model.system.UppaalSystem;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+
+import java.io.*;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -157,6 +156,38 @@ public class Uppaal {
         System.out.println(")");
     }
 
+    public static void printInFile(UppaalSystem sys, SymbolicState s, BufferedWriter br) throws IOException {
+        System.out.print("(");
+        br.write("(");
+        boolean first = true;
+        for (SystemLocation l: s.getLocations()) {
+            if (first) first=false; else {
+                System.out.print(", ");
+                br.write(", ");
+            }
+            System.out.print(l.getName());
+            br.write(l.getName());
+        }
+        int val[] = s.getVariableValues();
+        for (int i=0; i<sys.getNoOfVariables(); ++i) {
+            System.out.print(", ");
+            System.out.print(sys.getVariableName(i)+"="+val[i]);
+            br.write(", ");
+            br.write(sys.getVariableName(i)+"="+val[i]);
+        }
+        List<String> constraints = new ArrayList<>();
+        s.getPolyhedron().getAllConstraints(constraints);
+        for (String cs : constraints) {
+            System.out.print(", ");
+            System.out.print(cs);
+            br.write(", ");
+            br.write(cs);
+        }
+        System.out.println(")");
+        br.write(")");
+        br.newLine();
+    }
+
     static final BigDecimal zero = BigDecimal.valueOf(0);
 
     public static void print(UppaalSystem sys, ConcreteState s) {
@@ -247,7 +278,7 @@ public class Uppaal {
             path = here+"/bin-Linux/server";
         } else if ("Mac OS X".equals(os)) {
             path = here+"/bin-Darwin/server";
-        } else if ("Windows".equals(os)) {
+        } else if ("Windows".equals(os.split(" ")[0])) {
             path = here+"\\bin-Windows\\server.exe";
         } else {
             System.err.println("Unknown operating system.");
@@ -311,6 +342,40 @@ public class Uppaal {
             print(sys, tr.getTarget());
         }
         System.out.println();
+    }
+
+    public static void printTracePas(UppaalSystem sys, Iterator<SymbolicTransition> it, BufferedWriter br)
+    {
+        try {
+            SymbolicTransition tr = it.next();
+            if (tr.getSize()==0) {
+                // no edges, something special (like "deadlock" or initial state):
+                br.write(tr.getEdgeDescription());
+                System.out.println(tr.getEdgeDescription());
+            } else {
+                // one or more edges involved, print them:
+                boolean first = true;
+                for (SystemEdge e: tr.getEdges()) {
+                    if (first) first = false; else {
+                        br.write(", ");
+                        System.out.print(", ");
+                    }
+                    br.write(e.getProcessName()+": "
+                            + e.getEdge().getSource().getPropertyValue("name")
+                            + " \u2192 "
+                            + e.getEdge().getTarget().getPropertyValue("name"));
+                    System.out.print(e.getProcessName()+": "
+                            + e.getEdge().getSource().getPropertyValue("name")
+                            + " \u2192 "
+                            + e.getEdge().getTarget().getPropertyValue("name"));
+                }
+            }
+            br.newLine();
+            System.out.println();
+            printInFile(sys, tr.getTarget(), br);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     public static void printTrace(UppaalSystem sys, ConcreteTrace trace)

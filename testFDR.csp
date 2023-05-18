@@ -1,0 +1,9 @@
+channel cp1 : {0} 
+
+client_cp1 = cp1?x->client_cp1
+
+exp1=cp1?x->STOP
+
+GlobFormulla = client_cp1
+
+assert GlobFormulla [T= exp1

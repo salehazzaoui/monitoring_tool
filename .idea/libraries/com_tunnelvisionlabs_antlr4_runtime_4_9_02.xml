@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="com.tunnelvisionlabs:antlr4-runtime:4.9.0" type="repository">
+    <properties maven-id="com.tunnelvisionlabs:antlr4-runtime:LATEST" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/tunnelvisionlabs/antlr4-runtime/4.9.0/antlr4-runtime-4.9.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

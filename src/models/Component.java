@@ -14,6 +14,7 @@ public class Component extends ArchitecturalElement implements Serializable {
     public ArrayList<Port> ports = new ArrayList<>();
     public ArrayList<Method> methods = new ArrayList<>();
     private ComponentConstraint constraint;
+    private Csp globalCsp;
 
     private double width;
     private double height;
@@ -98,5 +99,25 @@ public class Component extends ArchitecturalElement implements Serializable {
 
     public void setConstraint(ComponentConstraint constraint) {
         this.constraint = constraint;
+    }
+
+    public int getMemoryConsummation() {
+        return memoryConsummation;
+    }
+
+    public void setMemoryConsummation(int memoryConsummation) {
+        this.memoryConsummation = memoryConsummation;
+    }
+
+    public ArrayList<Method> getMethods() {
+        return methods;
+    }
+
+    public Csp getGlobalCsp() {
+        return globalCsp;
+    }
+
+    public void setGlobalCsp(Csp globalCsp) {
+        this.globalCsp = globalCsp;
     }
 }

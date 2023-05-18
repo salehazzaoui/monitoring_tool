@@ -8,38 +8,28 @@ chan x0;
 chan x1;
 chan x2;
 chan x3;
-chan x4;
-chan x5;
-chan x6;
-chan x7;
-chan x8;
-chan x9;
-chan x10;
-chan x11;
 </declaration>
 	<template>
-		<name>database</name>
-		<location id="id0" x="150" y="550">
+		<name>client</name>
+		<location id="id0" x="150" y="50">
 		</location>
 		<location id="id1" x="0" y="0">
-			<name x="0" y="-28">database</name>
+			<name x="0" y="-28">client</name>
 		</location>
 		<init ref="id1"/>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id1"/>
-			<label kind="guard" x="60" y="247">t&lt;5</label>
 		</transition>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id0"/>
-			<label kind="guard" x="60" y="247">t&lt;5</label>
-			<label kind="synchronisation" x="60" y="261">x11?</label>
+			<label kind="synchronisation" x="60" y="11">x3?</label>
 			<nail x="70" y="25"/>
 		</transition>
 	</template>
 	<template>
-		<name>bp1</name>
+		<name>cp1</name>
 		<location id="id2" x="200" y="0">
 			<label kind="exponentialrate" x="200" y="-40">1</label>
 		</location>
@@ -47,279 +37,79 @@ chan x11;
 			<label kind="exponentialrate" x="100" y="-40">1</label>
 		</location>
 		<location id="id4" x="0" y="0">
-			<name x="0" y="-28">bp1</name>
+			<name x="0" y="-28">cp1</name>
 			<label kind="exponentialrate" x="0" y="-40">1</label>
 		</location>
 		<init ref="id4"/>
 		<transition>
 			<source ref="id3"/>
 			<target ref="id2"/>
-			<label kind="synchronisation" x="135" y="-14">x11!</label>
+			<label kind="synchronisation" x="135" y="-14">x3!</label>
 		</transition>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id3"/>
-			<label kind="synchronisation" x="35" y="-14">x10?</label>
-		</transition>
-	</template>
-	<template>
-		<name>c3</name>
-		<location id="id5" x="150" y="0">
-		</location>
-		<location id="id6" x="0" y="150">
-		</location>
-		<location id="id7" x="0" y="0">
-			<name x="0" y="-28">c3</name>
-		</location>
-		<init ref="id7"/>
-		<transition>
-			<source ref="id6"/>
-			<target ref="id5"/>
-			<label kind="guard" x="60" y="47">band&lt;1200</label>
-			<label kind="synchronisation" x="60" y="61">x10!</label>
-		</transition>
-		<transition>
-			<source ref="id7"/>
-			<target ref="id6"/>
-			<label kind="guard" x="-15" y="47">band&lt;1200</label>
-			<label kind="synchronisation" x="-15" y="61">x9?</label>
-		</transition>
-	</template>
-	<template>
-		<name>sp3</name>
-		<location id="id8" x="200" y="0">
-		</location>
-		<location id="id9" x="100" y="0">
-		</location>
-		<location id="id10" x="0" y="0">
-			<name x="0" y="-28">sp3</name>
-		</location>
-		<init ref="id10"/>
-		<transition>
-			<source ref="id9"/>
-			<target ref="id8"/>
-			<label kind="synchronisation" x="135" y="-14">x9!</label>
-		</transition>
-		<transition>
-			<source ref="id10"/>
-			<target ref="id9"/>
-			<label kind="synchronisation" x="35" y="-14">x8?</label>
-		</transition>
-	</template>
-	<template>
-		<name>sp2</name>
-		<location id="id11" x="200" y="0">
-			<label kind="exponentialrate" x="200" y="-40">1</label>
-		</location>
-		<location id="id12" x="100" y="0">
-			<label kind="exponentialrate" x="100" y="-40">1</label>
-		</location>
-		<location id="id13" x="0" y="0">
-			<name x="0" y="-28">sp2</name>
-			<label kind="exponentialrate" x="0" y="-40">1</label>
-		</location>
-		<init ref="id13"/>
-		<transition>
-			<source ref="id12"/>
-			<target ref="id11"/>
-			<label kind="synchronisation" x="135" y="-14">x7!</label>
-		</transition>
-		<transition>
-			<source ref="id13"/>
-			<target ref="id12"/>
-			<label kind="synchronisation" x="35" y="-14">x6?</label>
-		</transition>
-	</template>
-	<template>
-		<name>c2</name>
-		<location id="id14" x="150" y="0">
-		</location>
-		<location id="id15" x="0" y="150">
-		</location>
-		<location id="id16" x="0" y="0">
-			<name x="0" y="-28">c2</name>
-		</location>
-		<init ref="id16"/>
-		<transition>
-			<source ref="id15"/>
-			<target ref="id14"/>
-			<label kind="guard" x="60" y="47">band&lt;1500</label>
-			<label kind="synchronisation" x="60" y="61">x6!</label>
-		</transition>
-		<transition>
-			<source ref="id16"/>
-			<target ref="id15"/>
-			<label kind="guard" x="-15" y="47">band&lt;1500</label>
-			<label kind="synchronisation" x="-15" y="61">x5?</label>
-		</transition>
-	</template>
-	<template>
-		<name>cp2</name>
-		<location id="id17" x="200" y="0">
-		</location>
-		<location id="id18" x="100" y="0">
-		</location>
-		<location id="id19" x="0" y="0">
-			<name x="0" y="-28">cp2</name>
-		</location>
-		<init ref="id19"/>
-		<transition>
-			<source ref="id18"/>
-			<target ref="id17"/>
-			<label kind="synchronisation" x="135" y="-14">x5!</label>
-		</transition>
-		<transition>
-			<source ref="id19"/>
-			<target ref="id18"/>
-			<label kind="synchronisation" x="35" y="-14">x4?</label>
-		</transition>
-	</template>
-	<template>
-		<name>client</name>
-		<location id="id20" x="150" y="400">
-		</location>
-		<location id="id21" x="150" y="350">
-		</location>
-		<location id="id22" x="0" y="0">
-			<name x="0" y="-28">client</name>
-		</location>
-		<init ref="id22"/>
-		<transition>
-			<source ref="id20"/>
-			<target ref="id22"/>
-		</transition>
-		<transition>
-			<source ref="id22"/>
-			<target ref="id20"/>
-			<label kind="guard" x="60" y="172">t&lt;3</label>
-			<label kind="synchronisation" x="60" y="186">x4!</label>
-			<nail x="-70" y="25"/>
-		</transition>
-		<transition>
-			<source ref="id21"/>
-			<target ref="id22"/>
-			<label kind="guard" x="60" y="147">t&lt;3</label>
-		</transition>
-		<transition>
-			<source ref="id22"/>
-			<target ref="id21"/>
-			<label kind="guard" x="60" y="147">t&lt;3</label>
-			<label kind="synchronisation" x="60" y="161">x3?</label>
-			<nail x="70" y="25"/>
-		</transition>
-	</template>
-	<template>
-		<name>cp1</name>
-		<location id="id23" x="200" y="0">
-			<label kind="exponentialrate" x="200" y="-40">1</label>
-		</location>
-		<location id="id24" x="100" y="0">
-			<label kind="exponentialrate" x="100" y="-40">1</label>
-		</location>
-		<location id="id25" x="0" y="0">
-			<name x="0" y="-28">cp1</name>
-			<label kind="exponentialrate" x="0" y="-40">1</label>
-		</location>
-		<init ref="id25"/>
-		<transition>
-			<source ref="id24"/>
-			<target ref="id23"/>
-			<label kind="synchronisation" x="135" y="-14">x3!</label>
-		</transition>
-		<transition>
-			<source ref="id25"/>
-			<target ref="id24"/>
 			<label kind="synchronisation" x="35" y="-14">x2?</label>
 		</transition>
 	</template>
 	<template>
 		<name>c1</name>
-		<location id="id26" x="150" y="0">
+		<location id="id5" x="150" y="0">
 		</location>
-		<location id="id27" x="0" y="150">
+		<location id="id6" x="0" y="150">
 		</location>
-		<location id="id28" x="0" y="0">
+		<location id="id7" x="0" y="0">
 			<name x="0" y="-28">c1</name>
 		</location>
-		<init ref="id28"/>
+		<init ref="id7"/>
 		<transition>
-			<source ref="id27"/>
-			<target ref="id26"/>
-			<label kind="guard" x="60" y="47">band&lt;1200</label>
+			<source ref="id6"/>
+			<target ref="id5"/>
 			<label kind="synchronisation" x="60" y="61">x2!</label>
 		</transition>
 		<transition>
-			<source ref="id28"/>
-			<target ref="id27"/>
-			<label kind="guard" x="-15" y="47">band&lt;1200</label>
+			<source ref="id7"/>
+			<target ref="id6"/>
 			<label kind="synchronisation" x="-15" y="61">x1?</label>
 		</transition>
 	</template>
 	<template>
 		<name>sp1</name>
-		<location id="id29" x="200" y="0">
+		<location id="id8" x="200" y="0">
 		</location>
-		<location id="id30" x="100" y="0">
+		<location id="id9" x="100" y="0">
 		</location>
-		<location id="id31" x="0" y="0">
+		<location id="id10" x="0" y="0">
 			<name x="0" y="-28">sp1</name>
 		</location>
-		<init ref="id31"/>
+		<init ref="id10"/>
 		<transition>
-			<source ref="id30"/>
-			<target ref="id29"/>
+			<source ref="id9"/>
+			<target ref="id8"/>
 			<label kind="synchronisation" x="135" y="-14">x1!</label>
 		</transition>
 		<transition>
-			<source ref="id31"/>
-			<target ref="id30"/>
+			<source ref="id10"/>
+			<target ref="id9"/>
 			<label kind="synchronisation" x="35" y="-14">x0?</label>
 		</transition>
 	</template>
 	<template>
 		<name>server</name>
-		<location id="id32" x="150" y="500">
+		<location id="id11" x="150" y="0">
 		</location>
-		<location id="id33" x="150" y="450">
-		</location>
-		<location id="id34" x="150" y="300">
-		</location>
-		<location id="id35" x="0" y="0">
+		<location id="id12" x="0" y="0">
 			<name x="0" y="-28">server</name>
 		</location>
-		<init ref="id35"/>
+		<init ref="id12"/>
 		<transition>
-			<source ref="id32"/>
-			<target ref="id35"/>
+			<source ref="id11"/>
+			<target ref="id12"/>
 		</transition>
 		<transition>
-			<source ref="id35"/>
-			<target ref="id32"/>
-			<label kind="guard" x="60" y="222">t&lt;5</label>
-			<label kind="synchronisation" x="60" y="236">x8!</label>
-			<nail x="-70" y="25"/>
-		</transition>
-		<transition>
-			<source ref="id33"/>
-			<target ref="id35"/>
-			<label kind="guard" x="60" y="197">t&lt;5</label>
-		</transition>
-		<transition>
-			<source ref="id35"/>
-			<target ref="id33"/>
-			<label kind="guard" x="60" y="197">t&lt;5</label>
-			<label kind="synchronisation" x="60" y="211">x7?</label>
-			<nail x="70" y="25"/>
-		</transition>
-		<transition>
-			<source ref="id34"/>
-			<target ref="id35"/>
-		</transition>
-		<transition>
-			<source ref="id35"/>
-			<target ref="id34"/>
-			<label kind="guard" x="60" y="122">t&lt;5</label>
-			<label kind="synchronisation" x="60" y="136">x0!</label>
+			<source ref="id12"/>
+			<target ref="id11"/>
+			<label kind="synchronisation" x="60" y="-14">x0!</label>
 			<nail x="-70" y="25"/>
 		</transition>
 	</template>
@@ -328,14 +118,7 @@ sp11=sp1();
 c12=c1();
 cp13=cp1();
 client4=client();
-cp25=cp2();
-c26=c2();
-sp27=sp2();
-sp38=sp3();
-c39=c3();
-bp110=bp1();
-database11=database();
-system server0,sp11,c12,cp13,client4,cp25,c26,sp27,sp38,c39,bp110,database11;</system>
+system server0,sp11,c12,cp13,client4;</system>
 	<queries>
 	</queries>
 </nta>

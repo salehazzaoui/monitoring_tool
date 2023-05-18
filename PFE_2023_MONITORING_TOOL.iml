@@ -10,5 +10,7 @@
     <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="library" name="lib1" level="project" />
     <orderEntry type="library" name="uppaal" level="project" />
+    <orderEntry type="library" name="org.antlr:antlr4-runtime:4.11.1" level="project" />
+    <orderEntry type="library" name="fdr" level="project" />
   </component>
 </module>
