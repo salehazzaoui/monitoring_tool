@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<DialogPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.NewComponentController">
+    <header>
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="59.0" prefWidth="480.0">
+         <children>
+            <Label alignment="TOP_CENTER" layoutX="-1.0" layoutY="21.0" prefHeight="18.0" prefWidth="480.0" text="New Composite Component">
+               <font>
+                  <Font name="Arial Bold Italic" size="14.0" />
+               </font>
+            </Label>
+         </children></AnchorPane>
+    </header>
+    <content>
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="320.0">
+         <children>
+            <GridPane layoutX="1.0" layoutY="-2.0" prefHeight="194.0" prefWidth="448.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="227.199951171875" minWidth="10.0" prefWidth="75.19996337890625" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="381.60003662109375" minWidth="10.0" prefWidth="373.60003662109375" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="130.8" minHeight="10.0" prefHeight="130.8" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="60.59998168945313" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label prefHeight="18.0" prefWidth="125.0" text="Name">
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
+                  </Label>
+                  <Label prefHeight="18.0" prefWidth="125.0" text="Children" GridPane.rowIndex="1">
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="nameComposite" GridPane.columnIndex="1" />
+                  <ListView fx:id="childrenComp" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+               </children>
+            </GridPane>
+         </children></AnchorPane>
+    </content>
+    <expandableContent>
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="320.0" />
+    </expandableContent>
+</DialogPane>

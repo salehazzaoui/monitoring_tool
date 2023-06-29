@@ -3,9 +3,9 @@ package controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-import models.Component;
-import models.Csp;
-import models.Port;
+import models.static_part.Component;
+import models.dynamic_part.Csp;
+import models.static_part.Port;
 import utils.FDRVerification;
 
 import java.io.File;
@@ -35,6 +35,7 @@ public class NewGlobalCspController {
          * TODO: need to check later
          * this.checkCspStructureOfComponent(name, expression);
          * */
+
         this.checkCspBehaviorOfComponent(component);
 
     }
@@ -53,7 +54,7 @@ public class NewGlobalCspController {
         }
     }
 
-    private void checkCspBehaviorOfComponent(Component component){
+    private synchronized void checkCspBehaviorOfComponent(Component component){
         File fileCSP = new File("testFDR.csp");
         String Text ="";
         String channels ="";
@@ -157,6 +158,7 @@ public class NewGlobalCspController {
             else {
                 this.showAlert("Test FDR", "Test failed!", Alert.AlertType.ERROR);
             }
+            ffw.close();
         }
         catch(Exception e1){
             e1.printStackTrace();

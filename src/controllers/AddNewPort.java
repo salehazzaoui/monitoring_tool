@@ -6,10 +6,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
-import models.Component;
-import models.Configuration;
-import models.Csp;
-import models.Port;
+import models.static_part.Component;
+import models.dynamic_part.Csp;
+import models.static_part.Port;
 import utils.TypePort;
 
 import java.util.regex.Matcher;
@@ -54,7 +53,8 @@ public class AddNewPort {
             alert.show();
             return null;
         }
-        Port port = new Port(name.trim(), component, new Csp(name.trim(), this.csp));
+        Port port = new Port(name.trim(), component);
+        port.setCspExpression(new Csp(name.trim(), this.csp));
         component.getPorts().add(port);
         port.setType(TypePort.valueOf(portType));
 

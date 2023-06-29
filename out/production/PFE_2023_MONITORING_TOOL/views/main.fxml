@@ -11,38 +11,66 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TreeView?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="mainPane" prefHeight="574.0" prefWidth="845.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainController">
+<AnchorPane fx:id="mainPane" prefHeight="606.0" prefWidth="919.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.IndexController">
    <children>
-      <MenuBar layoutY="-3.0" prefHeight="26.0" prefWidth="846.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-        <menus>
-          <Menu fx:id="menuFile" mnemonicParsing="false" text="File">
-            <items>
-                  <MenuItem mnemonicParsing="false" text="Open" />
-                  <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#saveFile" text="Save" />
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
+      <HBox alignment="TOP_CENTER" layoutX="-2.0" layoutY="-3.0">
+         <children>
+            <MenuBar prefHeight="34.0" prefWidth="850.0" style="-fx-background-color: transparent;" HBox.hgrow="ALWAYS">
+              <menus>
+                <Menu fx:id="menuFile" mnemonicParsing="false" text="File">
+                  <items>
+                        <MenuItem fx:id="openItem" mnemonicParsing="false" onAction="#openFile" text="Open" />
+                        <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#saveFile" text="Save          Ctrl +">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="S" control="ANY" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+                  <Menu mnemonicParsing="false" text="View">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#setDarkTheme" text="Dark theme" />
+                        <MenuItem mnemonicParsing="false" onAction="#setLightTheme" text="Light theme" />
+                    </items>
+                  </Menu>
+              </menus>
+               <padding>
+                  <Insets bottom="2.0" top="5.0" />
+               </padding>
+            </MenuBar>
+         </children>
+      </HBox>
       <HBox layoutX="-1.0" layoutY="24.0" prefHeight="43.0" prefWidth="846.0" spacing="8.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0">
          <children>
             <Button fx:id="addConf" mnemonicParsing="false" onAction="#addNewConf" text="Add Configuratuion" />
-            <Button fx:id="addCom" mnemonicParsing="false" onAction="#addNewComponent" text="Add Component" />
-            <Button fx:id="addConnector" mnemonicParsing="false" onAction="#addNewConnector" text="Add Connector" />
+            <MenuButton mnemonicParsing="false" text="Add Component">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#addNewComponent" text="Simple" />
+                <MenuItem mnemonicParsing="false" onAction="#addNewComponentComposite" text="Composite" />
+              </items>
+            </MenuButton>
+            <MenuButton mnemonicParsing="false" text="Add connector">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#addNewConnector" text="Simple" />
+                <MenuItem mnemonicParsing="false" onAction="#addNewConnectorDelegation" text="Delegation" />
+              </items>
+            </MenuButton>
             <Button fx:id="addNonFConstraint" mnemonicParsing="false" onAction="#addNonFunctionalConstraint" text="Non-Functional Constraint" />
             <Button fx:id="addmethod" mnemonicParsing="false" onAction="#addMethod" text="Add Methode" />
             <MenuButton mnemonicParsing="false" text="Check Architecture">
@@ -51,9 +79,18 @@
                 <MenuItem fx:id="behavBtn" mnemonicParsing="false" onAction="#checkBehavioral" text="With Uppaal" />
               </items>
             </MenuButton>
+            <Button fx:id="runButton" mnemonicParsing="false" onAction="#runAutomata" text="Run">
+                <!--<graphic>
+                   <ImageView fitHeight="16.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                      <image>
+                         <Image url="/assets/images/run.jpg" />
+                     </image>
+                  </ImageView>
+               </graphic>-->
+            </Button>
          </children>
          <padding>
-            <Insets left="10.0" top="8.0" />
+            <Insets left="10.0" top="12.0" />
          </padding>
       </HBox>
       <HBox layoutX="4.0" layoutY="68.0" prefHeight="498.0" prefWidth="838.0" AnchorPane.bottomAnchor="7.600000000000023" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="68.0">
@@ -65,9 +102,9 @@
                     <tabs>
                       <Tab fx:id="mainConf" text="Main Configuration">
                            <content>
-                              <ScrollPane prefHeight="306.0" prefWidth="606.0">
+                              <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="306.0" prefWidth="606.0">
                                  <content>
-                                    <AnchorPane prefHeight="302.0" prefWidth="626.0" />
+                                    <AnchorPane fx:id="mainConfElement" prefHeight="302.0" prefWidth="626.0" />
                                  </content>
                               </ScrollPane>
                            </content>

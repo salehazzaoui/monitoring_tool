@@ -1,9 +1,11 @@
-channel cp1 : {0} 
+channel lp1 : {0} 
+channel lp2 : {0} 
 
-client_cp1 = cp1?x->client_cp1
+loadbalancer_lp1 = lp1!0->loadbalancer_lp1
+loadbalancer_lp2 = lp2?r->loadbalancer_lp2
 
-exp1=cp1?x->STOP
+loadbalancer=lp2?r->lp1!0->loadbalancer
 
-GlobFormulla = client_cp1
+GlobFormulla = loadbalancer_lp1 ||| loadbalancer_lp2
 
-assert GlobFormulla [T= exp1
+assert GlobFormulla [T= loadbalancer

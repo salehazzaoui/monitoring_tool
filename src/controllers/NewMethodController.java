@@ -1,11 +1,9 @@
 package controllers;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
-import models.Component;
-import models.Method;
+import javafx.scene.control.*;
+import models.static_part.Component;
+import models.static_part.Method;
 
 public class NewMethodController {
     @FXML
@@ -14,6 +12,15 @@ public class NewMethodController {
     private TextField methodTime;
     @FXML
     private ChoiceBox<String> component;
+    @FXML
+    private TableView table;
+    @FXML
+    private TableColumn nameCol;
+    @FXML
+    private TableColumn timeCol;
+    @FXML
+    private TableColumn componentCol;
+
     
     public boolean addMethod(Component component){
         int time;
@@ -35,11 +42,27 @@ public class NewMethodController {
             alert.show();
             return false;
         }
-        component.methods.add(new Method(name, time, component));
+        component.methods.add(new Method(name, time, component.getName()));
         return true;
     }
 
     public ChoiceBox<String> getComponent() {
         return component;
+    }
+
+    public TableView getTable() {
+        return table;
+    }
+
+    public TableColumn getNameCol() {
+        return nameCol;
+    }
+
+    public TableColumn getTimeCol() {
+        return timeCol;
+    }
+
+    public TableColumn getComponentCol() {
+        return componentCol;
     }
 }

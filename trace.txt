@@ -1,13 +1,201 @@
-(server, sp1, c1, cp1, client, band=0, consummation=0, t = 0)
-server0: server → , sp11: sp1 → 
-(🔾, 🔾, c1, cp1, client, band=0, consummation=0, t ≥ 0)
-server0:  → server
-(server, 🔾, c1, cp1, client, band=0, consummation=0, t ≥ 0)
-sp11:  → , c12: c1 → 
-(server, 🔾, 🔾, cp1, client, band=0, consummation=0, t ≥ 0)
-c12:  → , cp13: cp1 → 
-(server, 🔾, 🔾, 🔾, client, band=0, consummation=0, t ≥ 0)
-cp13:  → , client4: client → 
-(server, 🔾, 🔾, 🔾, 🔾, band=0, consummation=0, t ≥ 0)
-client4:  → client
-(server, 🔾, 🔾, 🔾, client, band=0, consummation=0, t ≥ 0)
+(L0, L0, L0, L0, L0, L0, L0, band=0, consummation=0, t = 0)
+loadbalancer0: L0 → L0, bindA4: L0 → L1
+(L0, L0, L0, L0, L1, L0, L0, band=120, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindB5: L0 → L1
+(L0, L0, L0, L0, L1, L1, L0, band=270, consummation=0, t ≥ 0)
+bindA4: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L1, L0, band=150, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindA4: L0 → L1
+(L0, L0, L0, L0, L1, L1, L0, band=270, consummation=0, t ≥ 0)
+bindB5: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L1, L0, L0, band=120, consummation=0, t ≥ 0)
+bindA4: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L0, band=0, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindB5: L0 → L1
+(L0, L0, L0, L0, L0, L1, L0, band=150, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindC6: L0 → L1
+(L0, L0, L0, L0, L0, L1, L1, band=330, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindA4: L0 → L1
+(L0, L0, L0, L0, L1, L1, L1, band=450, consummation=0, t ≥ 0)
+bindA4: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L1, L1, band=330, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindA4: L0 → L1
+(L0, L0, L0, L0, L1, L1, L1, band=450, consummation=0, t ≥ 0)
+bindA4: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L1, L1, band=330, consummation=0, t ≥ 0)
+bindC6: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L1, L0, band=150, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindA4: L0 → L1
+(L0, L0, L0, L0, L1, L1, L0, band=270, consummation=0, t ≥ 0)
+bindB5: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L1, L0, L0, band=120, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindC6: L0 → L1
+(L0, L0, L0, L0, L1, L0, L1, band=300, consummation=0, t ≥ 0)
+bindC6: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L1, L0, L0, band=120, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindC6: L0 → L1
+(L0, L0, L0, L0, L1, L0, L1, band=300, consummation=0, t ≥ 0)
+bindC6: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L1, L0, L0, band=120, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindB5: L0 → L1
+(L0, L0, L0, L0, L1, L1, L0, band=270, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindC6: L0 → L1
+(L0, L0, L0, L0, L1, L1, L1, band=450, consummation=0, t ≥ 0)
+bindB5: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L1, L0, L1, band=300, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindB5: L0 → L1
+(L0, L0, L0, L0, L1, L1, L1, band=450, consummation=0, t ≥ 0)
+bindC6: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L1, L1, L0, band=270, consummation=0, t ≥ 0)
+bindB5: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L1, L0, L0, band=120, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindC6: L0 → L1
+(L0, L0, L0, L0, L1, L0, L1, band=300, consummation=0, t ≥ 0)
+bindA4: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+bindC6: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L0, band=0, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindA4: L0 → L1
+(L0, L0, L0, L0, L1, L0, L0, band=120, consummation=0, t ≥ 0)
+bindA4: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L0, band=0, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindC6: L0 → L1
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+bindC6: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L0, band=0, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindC6: L0 → L1
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindB5: L0 → L1
+(L0, L0, L0, L0, L0, L1, L1, band=330, consummation=0, t ≥ 0)
+bindC6: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L1, L0, band=150, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindC6: L0 → L1
+(L0, L0, L0, L0, L0, L1, L1, band=330, consummation=0, t ≥ 0)
+bindB5: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindA4: L0 → L1
+(L0, L0, L0, L0, L1, L0, L1, band=300, consummation=0, t ≥ 0)
+bindA4: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+bindC6: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L0, band=0, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindC6: L0 → L1
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindA4: L0 → L1
+(L0, L0, L0, L0, L1, L0, L1, band=300, consummation=0, t ≥ 0)
+bindA4: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindA4: L0 → L1
+(L0, L0, L0, L0, L1, L0, L1, band=300, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindB5: L0 → L1
+(L0, L0, L0, L0, L1, L1, L1, band=450, consummation=0, t ≥ 0)
+bindC6: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L1, L1, L0, band=270, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindC6: L0 → L1
+(L0, L0, L0, L0, L1, L1, L1, band=450, consummation=0, t ≥ 0)
+bindB5: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L1, L0, L1, band=300, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindB5: L0 → L1
+(L0, L0, L0, L0, L1, L1, L1, band=450, consummation=0, t ≥ 0)
+bindA4: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L1, L1, band=330, consummation=0, t ≥ 0)
+bindB5: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindB5: L0 → L1
+(L0, L0, L0, L0, L0, L1, L1, band=330, consummation=0, t ≥ 0)
+bindB5: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+bindC6: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L0, band=0, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindC6: L0 → L1
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+bindC6: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L0, band=0, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindB5: L0 → L1
+(L0, L0, L0, L0, L0, L1, L0, band=150, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindA4: L0 → L1
+(L0, L0, L0, L0, L1, L1, L0, band=270, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindC6: L0 → L1
+(L0, L0, L0, L0, L1, L1, L1, band=450, consummation=0, t ≥ 0)
+bindB5: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L1, L0, L1, band=300, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindB5: L0 → L1
+(L0, L0, L0, L0, L1, L1, L1, band=450, consummation=0, t ≥ 0)
+bindA4: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L1, L1, band=330, consummation=0, t ≥ 0)
+bindC6: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L1, L0, band=150, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindA4: L0 → L1
+(L0, L0, L0, L0, L1, L1, L0, band=270, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindC6: L0 → L1
+(L0, L0, L0, L0, L1, L1, L1, band=450, consummation=0, t ≥ 0)
+bindC6: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L1, L1, L0, band=270, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindC6: L0 → L1
+(L0, L0, L0, L0, L1, L1, L1, band=450, consummation=0, t ≥ 0)
+bindB5: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L1, L0, L1, band=300, consummation=0, t ≥ 0)
+bindA4: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+bindC6: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L0, band=0, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindC6: L0 → L1
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindA4: L0 → L1
+(L0, L0, L0, L0, L1, L0, L1, band=300, consummation=0, t ≥ 0)
+bindA4: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+bindC6: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L0, band=0, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindB5: L0 → L1
+(L0, L0, L0, L0, L0, L1, L0, band=150, consummation=0, t ≥ 0)
+bindB5: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L0, band=0, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindC6: L0 → L1
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindB5: L0 → L1
+(L0, L0, L0, L0, L0, L1, L1, band=330, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindA4: L0 → L1
+(L0, L0, L0, L0, L1, L1, L1, band=450, consummation=0, t ≥ 0)
+bindB5: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L1, L0, L1, band=300, consummation=0, t ≥ 0)
+bindA4: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+bindC6: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L0, band=0, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindC6: L0 → L1
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindB5: L0 → L1
+(L0, L0, L0, L0, L0, L1, L1, band=330, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindA4: L0 → L1
+(L0, L0, L0, L0, L1, L1, L1, band=450, consummation=0, t ≥ 0)
+bindB5: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L1, L0, L1, band=300, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindB5: L0 → L1
+(L0, L0, L0, L0, L1, L1, L1, band=450, consummation=0, t ≥ 0)
+bindB5: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L1, L0, L1, band=300, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindB5: L0 → L1
+(L0, L0, L0, L0, L1, L1, L1, band=450, consummation=0, t ≥ 0)
+bindB5: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L1, L0, L1, band=300, consummation=0, t ≥ 0)
+bindA4: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+bindC6: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L0, band=0, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindC6: L0 → L1
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindB5: L0 → L1
+(L0, L0, L0, L0, L0, L1, L1, band=330, consummation=0, t ≥ 0)
+bindB5: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindA4: L0 → L1
+(L0, L0, L0, L0, L1, L0, L1, band=300, consummation=0, t ≥ 0)
+bindA4: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L0, L0, L1, band=180, consummation=0, t ≥ 0)
+loadbalancer0: L0 → L0, bindA4: L0 → L1
+(L0, L0, L0, L0, L1, L0, L1, band=300, consummation=0, t ≥ 0)
+bindC6: L1 → L0, serverA1: L0 → L0
+(L0, L0, L0, L0, L1, L0, L0, band=120, consummation=0, t ≥ 0)
+bindA4: L1 → L0, serverA1: L0 → L0
+not deadlock

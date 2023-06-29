@@ -4,13 +4,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
-import models.Connector;
-import models.Csp;
-import models.Port;
+import models.static_part.Connector;
+import models.dynamic_part.Csp;
+import models.static_part.Port;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +32,22 @@ public class NewConnectorController {
     private TextField cspOutField;
     @FXML
     private TextField cspInField;
+    @FXML
+    private TextField nameDelegation;
+    @FXML
+    private TextField bandDeleField;
+    @FXML
+    private ChoiceBox<String> compositeChoice;
+    @FXML
+    private ChoiceBox<String> comportsChoice;
+    @FXML
+    private ChoiceBox<String> delegatedPortChoice;
+    @FXML
+    private TextField cspCompPField;
+    @FXML
+    private TextField cspDelegationPFiled;
+    @FXML
+    private TextField cspConnectorDeleField;
 
     public ChoiceBox<String> getSrcCompChoice() {
         return srcCompChoice;
@@ -56,6 +71,66 @@ public class NewConnectorController {
 
     public void initCspInField(String csp) {
         this.cspInField.setText(csp);
+    }
+
+    public void initCspCompPField(String csp) {
+        this.cspCompPField.setText(csp);
+    }
+
+    public void initCspDelegationPField(String csp) {
+        this.cspDelegationPFiled.setText(csp);
+    }
+
+    public TextField getNameConnectorField() {
+        return nameConnectorField;
+    }
+
+    public TextField getBandConnectorField() {
+        return bandConnectorField;
+    }
+
+    public TextField getCspConnectorField() {
+        return cspConnectorField;
+    }
+
+    public TextField getCspOutField() {
+        return cspOutField;
+    }
+
+    public TextField getCspInField() {
+        return cspInField;
+    }
+
+    public TextField getNameDelegation() {
+        return nameDelegation;
+    }
+
+    public TextField getBandDeleField() {
+        return bandDeleField;
+    }
+
+    public ChoiceBox<String> getCompositeChoice() {
+        return compositeChoice;
+    }
+
+    public ChoiceBox<String> getComportsChoice() {
+        return comportsChoice;
+    }
+
+    public ChoiceBox<String> getDelegatedPortChoice() {
+        return delegatedPortChoice;
+    }
+
+    public TextField getCspCompPField() {
+        return cspCompPField;
+    }
+
+    public TextField getCspDelegationPField() {
+        return cspDelegationPFiled;
+    }
+
+    public TextField getCspConnectorDeleField() {
+        return cspConnectorDeleField;
     }
 
     public Connector addConnector(Port portIn, Port portOut){
@@ -85,12 +160,39 @@ public class NewConnectorController {
         return connector;
     }
 
+    public Connector addDelegationConnector(Port portIn, Port portOut){
+        int bandwitdh;
+        String name = nameDelegation.getText();
+        String band = bandDeleField.getText();
+        String expression = cspConnectorDeleField.getText();
+        if (name.isEmpty() || band.isEmpty() || expression.isEmpty()){
+            this.showAlert("Validation Error", "All fields are required!", Alert.AlertType.ERROR);
+            return null;
+        }
+        try {
+            bandwitdh = Integer.parseInt(band);
+        }catch (NumberFormatException e){
+            this.showAlert("Validation Error", e.getMessage(), Alert.AlertType.ERROR);
+            return null;
+        }
+
+        Connector connector = new Connector(name.trim(), portIn, portOut, bandwitdh);
+        if(!this.checkCsp(name, expression, connector)){
+            this.showAlert("CSP Error", "your CSP formula name or expression is invalid!", Alert.AlertType.ERROR);
+            return null;
+        }
+
+        this.showAlert("Validation Success", "Valid CSP expression", Alert.AlertType.INFORMATION);
+
+        return connector;
+    }
+
     private boolean checkCsp(String cspName, String cspExpression, Connector connector) {
         String port1 = connector.getPortIn().getName();
         String port2 = connector.getPortOut().getName();
         Pattern pName = Pattern.compile("[a-zA-Z]+[0-9]*");
         Matcher mName = pName.matcher(cspName);
-        Pattern pExpOut = Pattern.compile("([a-zA-Z]+[0-9]*)![a-zA-Z]+[0-9]*((?:[-]>[a-zA-Z]+[0-9]*(?:[?!][a-zA-Z]+[0-9]*))+)(?:[-]>[a-zA-Z]+[0-9]*)?");
+        Pattern pExpOut = Pattern.compile("([a-zA-Z]+[0-9]*)[!\\\\?][a-zA-Z]+[0-9]*((?:[-]>[a-zA-Z]+[0-9]*(?:[?!][a-zA-Z]+[0-9]*))+)(?:[-]>[a-zA-Z]+[0-9]*)?");
         Matcher cspExpressionOutMatcher1 = pExpOut.matcher(cspExpression);
         if (!mName.matches() && (!cspExpressionOutMatcher1.matches())) {
             //this.showAlert("CSP Error", "your CSP formula name and your CSP expression are invalid!", Alert.AlertType.ERROR);

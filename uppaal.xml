@@ -4,121 +4,149 @@
 	<declaration>int band = 0, consummation = 0;
 
 clock t;
-chan x0;
-chan x1;
-chan x2;
-chan x3;
+chan x;
+chan y;
+chan z;
 </declaration>
 	<template>
-		<name>client</name>
-		<location id="id0" x="150" y="50">
+		<name>bindC</name>
+		<location id="id0" x="250" y="0">
+			<name x="243" y="15">L1</name>
 		</location>
 		<location id="id1" x="0" y="0">
-			<name x="0" y="-28">client</name>
+			<name x="-7" y="15">L0</name>
 		</location>
 		<init ref="id1"/>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id1"/>
+			<label kind="guard" x="110" y="-28">band &lt;7500</label>
+			<label kind="synchronisation" x="110" y="-14">y!</label>
+			<label kind="assignment" x="110" y="0">band = band - 180</label>
+			<nail x="102" y="34"/>
 		</transition>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id0"/>
-			<label kind="synchronisation" x="60" y="11">x3?</label>
-			<nail x="70" y="25"/>
+			<label kind="guard" x="110" y="-28">band &lt;7500</label>
+			<label kind="synchronisation" x="110" y="-14">x?</label>
+			<label kind="assignment" x="110" y="0">band = band+180</label>
 		</transition>
 	</template>
 	<template>
-		<name>cp1</name>
-		<location id="id2" x="200" y="0">
-			<label kind="exponentialrate" x="200" y="-40">1</label>
+		<name>bindB</name>
+		<location id="id2" x="250" y="0">
+			<name x="243" y="15">L1</name>
 		</location>
-		<location id="id3" x="100" y="0">
-			<label kind="exponentialrate" x="100" y="-40">1</label>
+		<location id="id3" x="0" y="0">
+			<name x="-7" y="15">L0</name>
 		</location>
-		<location id="id4" x="0" y="0">
-			<name x="0" y="-28">cp1</name>
-			<label kind="exponentialrate" x="0" y="-40">1</label>
-		</location>
-		<init ref="id4"/>
+		<init ref="id3"/>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="guard" x="110" y="-28">band &lt;7000</label>
+			<label kind="synchronisation" x="110" y="-14">y!</label>
+			<label kind="assignment" x="110" y="0">band = band - 150</label>
+			<nail x="102" y="34"/>
+		</transition>
 		<transition>
 			<source ref="id3"/>
 			<target ref="id2"/>
-			<label kind="synchronisation" x="135" y="-14">x3!</label>
-		</transition>
-		<transition>
-			<source ref="id4"/>
-			<target ref="id3"/>
-			<label kind="synchronisation" x="35" y="-14">x2?</label>
+			<label kind="guard" x="110" y="-28">band &lt;7000</label>
+			<label kind="synchronisation" x="110" y="-14">x?</label>
+			<label kind="assignment" x="110" y="0">band = band+150</label>
 		</transition>
 	</template>
 	<template>
-		<name>c1</name>
-		<location id="id5" x="150" y="0">
+		<name>bindA</name>
+		<location id="id4" x="250" y="0">
+			<name x="243" y="15">L1</name>
 		</location>
-		<location id="id6" x="0" y="150">
+		<location id="id5" x="0" y="0">
+			<name x="-7" y="15">L0</name>
 		</location>
+		<init ref="id5"/>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id5"/>
+			<label kind="guard" x="110" y="-28">band &lt;8000</label>
+			<label kind="synchronisation" x="110" y="-14">y!</label>
+			<label kind="assignment" x="110" y="0">band = band - 120</label>
+			<nail x="102" y="34"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id4"/>
+			<label kind="guard" x="110" y="-28">band &lt;8000</label>
+			<label kind="synchronisation" x="110" y="-14">x?</label>
+			<label kind="assignment" x="110" y="0">band = band+120</label>
+		</transition>
+	</template>
+	<template>
+		<name>serverC</name>
+		<location id="id6" x="0" y="0">
+			<name x="-7" y="15">L0</name>
+		</location>
+		<init ref="id6"/>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="-15" y="-14">z?</label>
+			<nail x="80" y="15"/>
+			<nail x="102" y="34"/>
+		</transition>
+	</template>
+	<template>
+		<name>serverB</name>
 		<location id="id7" x="0" y="0">
-			<name x="0" y="-28">c1</name>
+			<name x="-7" y="15">L0</name>
 		</location>
 		<init ref="id7"/>
 		<transition>
-			<source ref="id6"/>
-			<target ref="id5"/>
-			<label kind="synchronisation" x="60" y="61">x2!</label>
-		</transition>
-		<transition>
 			<source ref="id7"/>
-			<target ref="id6"/>
-			<label kind="synchronisation" x="-15" y="61">x1?</label>
+			<target ref="id7"/>
+			<label kind="synchronisation" x="-15" y="-14">z?</label>
+			<nail x="80" y="15"/>
+			<nail x="102" y="34"/>
 		</transition>
 	</template>
 	<template>
-		<name>sp1</name>
-		<location id="id8" x="200" y="0">
+		<name>serverA</name>
+		<location id="id8" x="0" y="0">
+			<name x="-7" y="15">L0</name>
 		</location>
-		<location id="id9" x="100" y="0">
+		<init ref="id8"/>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id8"/>
+			<label kind="synchronisation" x="-15" y="-14">y?</label>
+			<nail x="80" y="15"/>
+			<nail x="102" y="34"/>
+		</transition>
+	</template>
+	<template>
+		<name>loadbalancer</name>
+		<location id="id9" x="0" y="0">
+			<name x="-7" y="15">L0</name>
 		</location>
-		<location id="id10" x="0" y="0">
-			<name x="0" y="-28">sp1</name>
-		</location>
-		<init ref="id10"/>
+		<init ref="id9"/>
 		<transition>
 			<source ref="id9"/>
-			<target ref="id8"/>
-			<label kind="synchronisation" x="135" y="-14">x1!</label>
-		</transition>
-		<transition>
-			<source ref="id10"/>
 			<target ref="id9"/>
-			<label kind="synchronisation" x="35" y="-14">x0?</label>
+			<label kind="synchronisation" x="-15" y="-14">x!</label>
+			<nail x="80" y="15"/>
+			<nail x="102" y="34"/>
 		</transition>
 	</template>
-	<template>
-		<name>server</name>
-		<location id="id11" x="150" y="0">
-		</location>
-		<location id="id12" x="0" y="0">
-			<name x="0" y="-28">server</name>
-		</location>
-		<init ref="id12"/>
-		<transition>
-			<source ref="id11"/>
-			<target ref="id12"/>
-		</transition>
-		<transition>
-			<source ref="id12"/>
-			<target ref="id11"/>
-			<label kind="synchronisation" x="60" y="-14">x0!</label>
-			<nail x="-70" y="25"/>
-		</transition>
-	</template>
-	<system>server0=server();
-sp11=sp1();
-c12=c1();
-cp13=cp1();
-client4=client();
-system server0,sp11,c12,cp13,client4;</system>
+	<system>loadbalancer0=loadbalancer();
+serverA1=serverA();
+serverB2=serverB();
+serverC3=serverC();
+bindA4=bindA();
+bindB5=bindB();
+bindC6=bindC();
+system loadbalancer0,serverA1,serverB2,serverC3,bindA4,bindB5,bindC6;</system>
 	<queries>
 	</queries>
 </nta>

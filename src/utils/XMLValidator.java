@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class XMLValidator {
 
-    public static boolean validateXMLSchema(String xsdPath, String xmlPath){
+    public static String validateXMLSchema(String xsdPath, String xmlPath) {
 
         try {
             SchemaFactory factory =
@@ -21,9 +21,8 @@ public class XMLValidator {
             Validator validator = schema.newValidator();
             validator.validate(new StreamSource(new File(xmlPath)));
         } catch (IOException | SAXException e) {
-            System.out.println("Exception: "+e.getMessage());
-            return false;
+            return e.getMessage();
         }
-        return true;
+        return "valid";
     }
 }

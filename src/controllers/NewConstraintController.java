@@ -5,10 +5,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
-import models.Component;
-import models.ComponentConstraint;
-import models.Connector;
-import models.ConnectorConstraint;
+import models.static_part.Component;
+import models.dynamic_part.ComponentConstraint;
+import models.static_part.Connector;
+import models.dynamic_part.ConnectorConstraint;
 
 public class NewConstraintController {
     @FXML
@@ -86,5 +86,21 @@ public class NewConstraintController {
 
     public ChoiceBox<String> getConnectorChoice() {
         return connectorChoice;
+    }
+
+    public void setCompMemoryField(String compMemory) {
+        this.compMemoryField.setText(compMemory);
+    }
+
+    public void setCompTimeField(String time) {
+        this.compTimeField.setText(time);
+    }
+
+    public void setConcTimeField(String time) {
+        this.concTimeField.setText(time);
+    }
+
+    public void setConcBandField(String band) {
+        this.concBandField.setText(band);
     }
 }

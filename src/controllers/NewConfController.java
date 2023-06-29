@@ -3,7 +3,7 @@ package controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-import models.Configuration;
+import models.static_part.Configuration;
 import models.Model;
 
 
@@ -13,9 +13,17 @@ public class NewConfController {
     private TextField cTextField;
 
     public Configuration addConf(){
-        if(!cTextField.getText().isEmpty()) {
+        String confName = cTextField.getText();
+        if(!confName.isEmpty()) {
             Model model = Model.getInstance();
-            Configuration configuration = new Configuration(cTextField.getText().trim());
+            if(!model.configurations.stream().filter(configuration -> configuration.getName().equals(confName.trim())).toList().isEmpty()){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Validation Error");
+                alert.setContentText("The name must be different.");
+                alert.show();
+                return null;
+            }
+            Configuration configuration = new Configuration(confName.trim());
             model.configurations.add(configuration);
             return configuration;
         }

@@ -4,16 +4,19 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DialogPane?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<DialogPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.NewMethodController">
+<DialogPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="447.0" prefWidth="479.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.NewMethodController">
     <header>
-      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="58.0" prefWidth="480.0">
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="60.0" prefWidth="504.0">
          <children>
             <Label alignment="CENTER" layoutX="2.0" layoutY="21.0" prefHeight="18.0" prefWidth="480.0" text="Add new Method">
                <font>
@@ -26,36 +29,47 @@
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="320.0" />
     </expandableContent>
    <content>
-      <GridPane>
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="222.79998779296875" minWidth="10.0" prefWidth="80.40001678466797" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="406.00000762939453" minWidth="10.0" prefWidth="379.59998321533203" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+      <VBox prefHeight="345.0" prefWidth="481.0">
          <children>
-            <Label prefHeight="18.0" prefWidth="78.0" text="Name">
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-            </Label>
-            <Label layoutX="20.0" layoutY="40.0" prefHeight="18.0" prefWidth="78.0" text="Time exe" GridPane.rowIndex="1">
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-            </Label>
-            <Label layoutX="20.0" layoutY="96.0" prefHeight="18.0" prefWidth="78.0" text="Component" GridPane.rowIndex="2">
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-            </Label>
-            <TextField fx:id="methodName" GridPane.columnIndex="1" />
-            <TextField fx:id="methodTime" layoutX="100.0" layoutY="36.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <ChoiceBox fx:id="component" prefHeight="26.0" prefWidth="377.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <GridPane prefHeight="145.0" prefWidth="486.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="222.79998779296875" minWidth="10.0" prefWidth="89.40003662109375" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="406.00000762939453" minWidth="10.0" prefWidth="369.39996337890625" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label prefHeight="18.0" prefWidth="78.0" text="Name">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+                  <Label layoutX="20.0" layoutY="40.0" prefHeight="18.0" prefWidth="78.0" text="Time exe" GridPane.rowIndex="1">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+                  <Label layoutX="20.0" layoutY="96.0" prefHeight="18.0" prefWidth="78.0" text="Component" GridPane.rowIndex="2">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="methodName" GridPane.columnIndex="1" />
+                  <TextField fx:id="methodTime" layoutX="100.0" layoutY="36.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <ChoiceBox fx:id="component" prefHeight="26.0" prefWidth="381.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+               </children>
+            </GridPane>
+            <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0">
+              <columns>
+                <TableColumn fx:id="nameCol" prefWidth="115.99999272823334" text="Name" />
+                <TableColumn fx:id="timeCol" prefWidth="164.79998779296875" text="Execution Time" />
+                  <TableColumn fx:id="componentCol" prefWidth="176.0" text="Component" />
+              </columns>
+            </TableView>
          </children>
-      </GridPane>
+      </VBox>
    </content>
 </DialogPane>
